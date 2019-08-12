@@ -22,7 +22,7 @@
         
     </title>
 
-    <link rel="canonical" href="https://ricechuang.github.io/2019/08/12/分散式系統與資料一致性/分散式系統與資料一致性/">
+    <link rel="canonical" href="./2019/08/12/分散式系統與資料一致性/分散式系統與資料一致性/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -165,6 +165,9 @@
                     </span>
                     <div class="tags text-center">
                         
+                        <a class="tag" href="/tags/#Distributed system"
+                           title="Distributed system">Distributed system</a>
+                        
                     </div>
                 </div>
             </div>
@@ -183,7 +186,55 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
-                
+                <p>最近常常遇到許多高並發的問題，也就看了一下分散式系統 (Distributed Systems)的內部運作，畢竟這已經是現代架構的常態會使用的東西，這裡就記錄一下我看到的與整理下來的資訊</p>
+<h1 id="什麼是分散式系統-Distributed-Systems"><a href="#什麼是分散式系統-Distributed-Systems" class="headerlink" title="什麼是分散式系統 (Distributed Systems)"></a>什麼是分散式系統 (Distributed Systems)</h1><p>分散式系統是支援分散式處理的軟體系統，是由通訊網路互聯的多處理機體系結構上執行任務的系統。包括分散式作業系統、分散式程式設計語言及其編譯系統、分散式檔案系統分散式資料庫系統等，當然這些也是分散式的關鍵技術。</p>
+<h1 id="為什麼需要？-什麼場景可以使用？"><a href="#為什麼需要？-什麼場景可以使用？" class="headerlink" title="為什麼需要？ 什麼場景可以使用？"></a>為什麼需要？ 什麼場景可以使用？</h1><p>以我自己遇到的問題來說，也就是遇到高並發的問題，高並發簡單來說就是在同時或者極短的時間內，有大量的請求打到服務端，而服務端需要在不會減速且不會有丟失資料的能力下，回覆給每一個使用者。</p>
+<p>能夠一瞬間支撐如此大量的請求，這時候就需要分散式系統的設計將流量平均分給每台機器或者每個獨立的邏輯處理，能夠簡單快速的垂直或水平的拆分業務系統，讓其變成一個分散式的架構。</p>
+<h1 id="有什麼優缺點？"><a href="#有什麼優缺點？" class="headerlink" title="有什麼優缺點？"></a>有什麼優缺點？</h1><p>網路上有許多詳細列出他的優缺點我這邊不一項項列出，就列出我認爲比較重要的點：</p>
+<ol>
+<li>快速，快速，快速<ul>
+<li>分散式系統因為切割出了多台機器或者多台維服務，因此可以並行處理，想想一百個人做事總比一個人做來得快麻</li>
+</ul>
+</li>
+<li>高可用性<ul>
+<li>因為工作負載都是分散在多台機器上，一台機器掛點並不會影響到其他機器，且因為有高度的擴展性，真的有機器掛了可以馬上擴充上新的機器做頂替</li>
+</ul>
+</li>
+<li>易擴充<ul>
+<li>延續上面的優點，因為高度的擴展性，所以在機器不夠或者需要增加容量時，可以很簡單的做到</li>
+</ul>
+</li>
+</ol>
+<p>缺點這邊就直接指向我遇到的困難，各台機器資料一致性的問題。</p>
+<h1 id="一致性問題"><a href="#一致性問題" class="headerlink" title="一致性問題"></a>一致性問題</h1><p>講到一致性就必須先提起分散式事務的理論</p>
+<h2 id="CAP理論"><a href="#CAP理論" class="headerlink" title="CAP理論"></a>CAP理論</h2><p>CAP 是指在一個分散式系統下， 包含三個要素：Consistency（一致性）、Availability（可用性）、Partition tolerance（分割槽容錯性），並且三者不可得兼。</p>
+<img src="/image/post/distributed/1.png" width="70%" height="35%">
+
+<p>C：Consistency，一致性，所有資料變動都是同步的。</p>
+<p>A：Availability，可用性，即在可以接受的時間範圍內正確地響應使用者請求。</p>
+<p>P：Partition tolerance，分割槽容錯性，即某節點或網路分割槽故障時，系統仍能夠提供滿足一致性和可用性的服務。</p>
+<p>由於分割槽容忍性是可伸縮的最基本要求，放棄分割槽容忍性等於放棄可伸縮，所以分割槽容忍性是必選項，大部分的分散式系統都是在C和A之間做選擇。<br>而對於我的情況來說，我也必須要保證服務的可用性，因此我選擇了PA模式而C的一致性則使用弱一致性或者是最終一致性來解決問題</p>
+<h2 id="Base理論"><a href="#Base理論" class="headerlink" title="Base理論"></a>Base理論</h2><p>因此延伸出了此理論來支持一致性</p>
+<p>BASE 理論主要是解決 CAP 理論中分散式系統的可用性和一致性不可兼得的問題。BASE 理論包含以下三個要素：</p>
+<p>BA：Basically Available，基本可用。</p>
+<p>S：Soft State，軟狀態，狀態可以有一段時間不同步。</p>
+<p>E：Eventually Consistent，最終一致，最終資料是一致的就可以了，而不是時時保持強一致</p>
+<h2 id="實踐"><a href="#實踐" class="headerlink" title="實踐"></a>實踐</h2><p>因主要問題在於資料的同步，因此實踐的部分則是使用了演算法解決<br>共識演算法 (Consensus Algorithm)，而參考的就是Raft演算法</p>
+<h3 id="Raft-演算法"><a href="#Raft-演算法" class="headerlink" title="Raft 演算法"></a>Raft 演算法</h3><p>Raft more understandable than Paxos and also provides a better foundation for building practical systems</p>
+<p>Raft就是簡單易懂化了Paxos的演算法，變得更淺顯易懂</p>
+<p>Raft協議中，一個節點任一個時刻處於以下三個狀態：</p>
+<ul>
+<li>leader</li>
+<li>follower</li>
+<li>candidate</li>
+</ul>
+<p>而詳細運作方面可以參考下面的動畫連結<br><a href="http://thesecretlivesofdata.com/raft/" target="_blank" rel="noopener">http://thesecretlivesofdata.com/raft/</a></p>
+<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><ul>
+<li><a href="http://thesecretlivesofdata.com/raft/" target="_blank" rel="noopener">http://thesecretlivesofdata.com/raft/</a> raft動畫</li>
+<li><a href="https://www.itread01.com/content/1545011956.html" target="_blank" rel="noopener">https://www.itread01.com/content/1545011956.html</a> raft演算法</li>
+<li><a href="https://medium.com/mold-project/consistency-e3e0fe41358d" target="_blank" rel="noopener">https://medium.com/mold-project/consistency-e3e0fe41358d</a> distributed system data consistency</li>
+</ul>
+
                 <hr>
                 
 
@@ -217,7 +268,7 @@
 
             <div class="hidden-xs col-sm-3 toc-col">
                 <div class="toc-wrap">
-                    
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#什麼是分散式系統-Distributed-Systems"><span class="toc-text">什麼是分散式系統 (Distributed Systems)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#為什麼需要？-什麼場景可以使用？"><span class="toc-text">為什麼需要？ 什麼場景可以使用？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#有什麼優缺點？"><span class="toc-text">有什麼優缺點？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一致性問題"><span class="toc-text">一致性問題</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CAP理論"><span class="toc-text">CAP理論</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Base理論"><span class="toc-text">Base理論</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#實踐"><span class="toc-text">實踐</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Raft-演算法"><span class="toc-text">Raft 演算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reference"><span class="toc-text">reference</span></a></li></ol></li></ol>
                 </div>
             </div>
         </div>
@@ -239,6 +290,9 @@
                     </h5>
                     <div class="tags">
                         
+                        <a class="tag" href="/tags/#Distributed system"
+                           title="Distributed system">Distributed system</a>
+                        
                     </div>
                 </section>
                 
@@ -257,8 +311,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "wulojason";
-    var disqus_identifier = "https://ricechuang.github.io/2019/08/12/分散式系統與資料一致性/分散式系統與資料一致性/";
-    var disqus_url = "https://ricechuang.github.io/2019/08/12/分散式系統與資料一致性/分散式系統與資料一致性/";
+    var disqus_identifier = "./2019/08/12/分散式系統與資料一致性/分散式系統與資料一致性/";
+    var disqus_url = "./2019/08/12/分散式系統與資料一致性/分散式系統與資料一致性/";
 
     (function () {
         var dsq = document.createElement('script');
@@ -358,7 +412,7 @@
 <script>
     // only load tagcloud.js in tag.html
     if($('#tag_cloud').length !== 0){
-        async("https://ricechuang.github.io/js/jquery.tagcloud.js",function(){
+        async("./js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
                 //size: {start: 1, end: 1, unit: 'em'},
                 color: {start: '#bbbbee', end: '#0085a1'},
