@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="專職後端路，不求五路皆神，只求自己不要當個坑">
+    <meta name="keyword" content>
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://i.imgur.com/uYkQZnI.png">
+    <link rel="alternate" type="application/atom+xml" title="WuluJason" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        Garbage Collection 介紹｜WuluJason&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="https://ricechuang.github.io/2019/07/18/Garbage-Collection-介紹/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('//o7bkkhiex.bkt.clouddn.com/lion-blur-bg.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    WuluJason
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>Garbage Collection 介紹</h1>
+                    
+                    <span class="meta">
+                         作者 Jason Chuang
+                        <span>
+                          日期 2019-07-18
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#golang"
+                           title="golang">golang</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            Garbage Collection 介紹
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>前陣子對golang中的回收機制突然有興趣,因為golang再回收機制上面我自己在run service時<br>回收的速度特別有感觸,所以研究了一下,並且稍微紀錄一些小筆記跟大家分享</p>
+<h1 id="What-is-GC"><a href="#What-is-GC" class="headerlink" title="What is GC?"></a>What is GC?</h1><p>GC 是Garbage Collection 的簡稱，中文稱為“垃圾回收”。<br>那在GC裡面什麼定義為“垃圾”？</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">把分配到堆中那些不能通過程序引用的對象稱為非活動對象，也就是死掉的對象，我們稱為“垃圾”。</span><br></pre></td></tr></table></figure>
+
+<h1 id="What-is-GC-doing"><a href="#What-is-GC-doing" class="headerlink" title="What is GC doing ?"></a>What is GC doing ?</h1><p>而GC主要工作就做兩件事情</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">1.找到內存空間裡的垃圾。</span><br><span class="line">2.回收垃圾，讓程序員能再次利用這部分空間。</span><br></pre></td></tr></table></figure>
+
+<h2 id="Heap-And-Stack"><a href="#Heap-And-Stack" class="headerlink" title="Heap And Stack"></a>Heap And Stack</h2><p>講到golang如何選擇哪些是”垃圾“,就不免談到 heap 與 stack的關係<br>簡單來說, stack 在大陸翻譯都叫做“堆”, 而heap 則稱“棧”, 不要問我為什麼因為我也不知道<br>在這邊就直接以原文來介紹這兩個的關係。</p>
+<ul>
+<li>stack 主要用於靜態記憶體配置,也就是你可以預期收回的空間都會存放於 stack</li>
+<li>heap  則是主要用於動態記憶體配置,是無法預期或者不能確定此空間大小則會放於 heap 上<img src="/image/post/gc/3.png" width="70%" height="40%">
+用此程式碼來介紹說, 在StudentRegister中 我new了一個Student struct 的空間,
+但因為在這個情況下, 程式會認為這個宣告沒有一個明確的收回以及空間的宣告,這時就會將這個s
+配置的空間放於heap底下。 
+p.s. 因為stack能存放的空間是有一定大小的，因此遇到不確定的空間宣告時，程式會將這些空間放在heap 下才不怕記憶體爆炸！！
+而另外main再呼叫StudentRegister時,可以明確知道main執行完後就會收回,因此程式則會將他放於stack中
+<img src="/image/post/gc/4.png" width="70%" height="35%">
+golang 有個方便的參數 `-gcflags=-m` 這參數可以幫我檢查宣告的物件是否跑至heap或存於stack中
+
+
+</li>
+</ul>
+<h1 id="If-we-don’t-have-GC"><a href="#If-we-don’t-have-GC" class="headerlink" title="If we don’t have GC"></a>If we don’t have GC</h1><p>如果沒有GC， 工程師們就得自行做內存管理，也就是上面我介紹的你不只要做好stack的回收<br>並且你也需要將所有跑至heap的空間管理好，否則service 跑著跑著就會記憶體不夠。<br>這不打緊，更怕的是可能會有收錯的問題，更嚴重可能會有重複宣告空間，講這麼多大概有感覺的GC<br>的重要了吧。</p>
+<h1 id="GC-introduction"><a href="#GC-introduction" class="headerlink" title="GC introduction"></a>GC introduction</h1><h2 id="mark-sweep"><a href="#mark-sweep" class="headerlink" title="mark-sweep"></a>mark-sweep</h2><img src="/image/post/gc/5.gif" width="60%" height="50%">
+
+<ol>
+<li>會先從根路徑往下尋找所有的得達到的節點</li>
+<li>將這些節點做標記</li>
+<li>全部標記完後,將會STW(stop the world)</li>
+<li>將其他沒有標記到的節點做刪除</li>
+<li>Start the world</li>
+</ol>
+<p>缺點：</p>
+<ol>
+<li>The larger the memory, the longer the scan.</li>
+<li>Stop The World.</li>
+</ol>
+<h2 id="reference-counting"><a href="#reference-counting" class="headerlink" title="reference counting"></a>reference counting</h2><img src="/image/post/gc/6.png" width="100%" height="30%">
+
+<ol>
+<li>任何只要一被宣告的空間就給他個一計數器(count)</li>
+<li>若有人引用此空間count則會加一，反之取消引用則減一</li>
+<li>當count為0時，代表無人引用，此時即可將空間給收回</li>
+</ol>
+<p>缺點：</p>
+<ol>
+<li>Need to refer to the counting field.</li>
+<li>Can not directly deal with ring garbage.</li>
+</ol>
+<h2 id="copying"><a href="#copying" class="headerlink" title="copying"></a>copying</h2><img src="/image/post/gc/7.png" width="50%" height="70%">
+
+<ol>
+<li>會將記憶體分為 from and to 兩個空間</li>
+<li>當空間不足分配新對象或者定時需要收取時，則會觸發GC，做STW</li>
+<li>此時就會將所有存活的對象全部複製到to空間下</li>
+<li>當複製完成後再將from 和 to 的空間互換</li>
+</ol>
+<p>缺點：</p>
+<ol>
+<li>Only half of the memory can be used at a time.</li>
+<li>The larger the memory, the longer it will scan and move.</li>
+<li>Pause the app for a long time.</li>
+</ol>
+<h2 id="小結"><a href="#小結" class="headerlink" title="小結"></a>小結</h2><p>對於各種的GC方式先做個簡單的介紹，之後會再介紹golang使用的GC機制是怎麼樣的<br>但總歸一句，我能活在GC發明後的時代真是太好了（因為我是個很懶惰的人）！</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/07/22/Golang-GC-introduction/golang-GC-introduction/" data-toggle="tooltip" data-placement="top"
+                           title="Golang GC introduction">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/06/28/centos-php7-mariadb/" data-toggle="tooltip" data-placement="top"
+                           title="建立LAMP快速簡單 - Install Lamp with centos-php7">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+
+                <!--加入新的评论系统-->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#What-is-GC"><span class="toc-text">What is GC?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#What-is-GC-doing"><span class="toc-text">What is GC doing ?</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Heap-And-Stack"><span class="toc-text">Heap And Stack</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#If-we-don’t-have-GC"><span class="toc-text">If we don’t have GC</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GC-introduction"><span class="toc-text">GC introduction</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#mark-sweep"><span class="toc-text">mark-sweep</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reference-counting"><span class="toc-text">reference counting</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#copying"><span class="toc-text">copying</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小結"><span class="toc-text">小結</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#golang"
+                           title="golang">golang</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "wulojason";
+    var disqus_identifier = "https://ricechuang.github.io/2019/07/18/Garbage-Collection-介紹/";
+    var disqus_url = "https://ricechuang.github.io/2019/07/18/Garbage-Collection-介紹/";
+
+    (function () {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/profile.php?id=100000111348890">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/riceChuang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/jason-chuang-654296177">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; WuluJason 2022
+                    <br>
+                    Theme by Haojen Ma
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://ricechuang.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-142468522-1';
+    var _gaDomain = 'auto';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="">
+</body>
+
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="專職後端路，不求五路皆神，只求自己不要當個坑">
+    <meta name="keyword" content>
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://i.imgur.com/uYkQZnI.png">
+    <link rel="alternate" type="application/atom+xml" title="WuluJason" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        建立LAMP快速簡單 - Install Lamp with centos-php7｜WuluJason&#39;s blog
+        
+    </title>
+
+    <link rel="canonical" href="https://ricechuang.github.io/2019/06/28/centos-php7-mariadb/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+</head>
+
+<style>
+
+    header.intro-header {
+        background-image: url('//o7bkkhiex.bkt.clouddn.com/lion-blur-bg.jpg')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
+" data-ishome = "false" >
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    WuluJason
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+								
+							
+						
+                    
+					
+					
+						<li>
+							<a href="/about">About</a>
+						</li>
+					
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="">
+
+
+<style>
+    
+    header.intro-header {
+        background-image: url('')
+    }
+
+    
+</style>
+
+<header class="intro-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>建立LAMP快速簡單 - Install Lamp with centos-php7</h1>
+                    
+                    <span class="meta">
+                         作者 Jason Chuang
+                        <span>
+                          日期 2019-06-28
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#LAMP"
+                           title="LAMP">LAMP</a>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="post-title-haojen">
+        <span>
+            建立LAMP快速簡單 - Install Lamp with centos-php7
+        </span>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>之前在寫PHP時，都是使用linux做開發，想當然最基本的就是需要一個開發環境。<br>所以在做筆記就順便寫了一份如何快速安裝的方法，這邊就一步一步往下看來安裝吧。</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><p>你需要先有一個乾淨的linux環境，我是使用vvmware workstation 來掛載安裝一套centos，如何安裝這裡就不詳細說明</p>
+<h2 id="Step-1"><a href="#Step-1" class="headerlink" title="Step 1"></a>Step 1</h2><p>更新 yum 套件，輸入以下指令:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo yum update</span><br></pre></td></tr></table></figure>
+
+<p><strong>會出現如下圖。輸入 Y 並按下[ Enter ]</strong></p>
+<p><img src="/image/post/centos/1.jpg" alt title="yum update"></p>
+<p>此動作是為了確保yum安裝皆能安裝上最新的套件，若有定期更新者可以略過</p>
+<h2 id="Step-2"><a href="#Step-2" class="headerlink" title="Step 2"></a>Step 2</h2><h3 id="安裝Apache"><a href="#安裝Apache" class="headerlink" title="安裝Apache"></a>安裝Apache</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo yum install httpd</span><br></pre></td></tr></table></figure>
+
+<p>一樣輸入 Y 並按下[ Enter ]</p>
+<p><img src="/image/post/centos/2.jpg" alt title="install httpd"></p>
+<p>會出現 Complete! 字樣。表示已升級完畢!!</p>
+<h3 id="啟動Apache"><a href="#啟動Apache" class="headerlink" title="啟動Apache"></a>啟動Apache</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo systemctl start httpd.service</span><br></pre></td></tr></table></figure>
+
+<h3 id="設定Apache，隨CentOS開機自動啟動"><a href="#設定Apache，隨CentOS開機自動啟動" class="headerlink" title="設定Apache，隨CentOS開機自動啟動"></a>設定Apache，隨CentOS開機自動啟動</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo systemctl enable httpd.service</span><br></pre></td></tr></table></figure>
+
+<p>到這邊Apache就安裝完成了。我們可以用以下指令查看Apache的狀態</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ systemctl status httpd.service</span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/post/centos/3.jpg" alt title="httpd status"></p>
+<h2 id="Step-3"><a href="#Step-3" class="headerlink" title="Step 3"></a>Step 3</h2><h3 id="安裝MariaDB"><a href="#安裝MariaDB" class="headerlink" title="安裝MariaDB"></a>安裝MariaDB</h3><p>這部份我們要來安裝mariadb。其實，mariadb跟MySQL算是一樣的東西。都是MySQL的開發者開發的。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo yum install mariadb-server mariadb</span><br></pre></td></tr></table></figure>
+
+<p>安裝。一樣輸入 Y 並按下[ Enter ]</p>
+<p><img src="/image/post/centos/4.jpg" alt title="install mariadb"></p>
+<p>等一段時間後，會出現 Complete! 字樣。</p>
+<h3 id="啟動MariaDB"><a href="#啟動MariaDB" class="headerlink" title="啟動MariaDB"></a>啟動MariaDB</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo systemctl start mariadb</span><br></pre></td></tr></table></figure>
+
+<h3 id="設定初始化MariaDB"><a href="#設定初始化MariaDB" class="headerlink" title="設定初始化MariaDB"></a>設定初始化MariaDB</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo mysql_secure_installation</span><br></pre></td></tr></table></figure>
+
+<p>它會要求您輸入root的密碼</p>
+<p>但我們根本沒有設定過，所以直接按下[enter]就好</p>
+<p><img src="/image/post/centos/5.jpg" alt title="mysql init"></p>
+<p>設定root密碼<br>接下來，它會問您是否要設定root密碼。 Y</p>
+<p><img src="/image/post/centos/6.jpg" alt title="root pwd"></p>
+<p>設定root密碼。 需要重複確認</p>
+<p><img src="/image/post/centos/7.jpg" alt title="double check"></p>
+<p>刪除匿名使用者<br>一般情況下，我們不太可能會希望任何人都可以訪問我們的資料庫，所以此部分選擇 Y ，刪除匿名使用者。</p>
+<p><img src="/image/post/centos/8.jpg" alt title="delete user"></p>
+<p>禁止遠端root登入<br>root帳號擁有至高的權限，因此基於安全性考量，通常不允許遠端登入使用root登入。</p>
+<p><img src="/image/post/centos/9.jpg" alt title="remote root"></p>
+<p>刪除Test測試資料庫<br><img src="/image/post/centos/10.jpg" alt title="delete root test"></p>
+<p>重新載入權限表<br><img src="/image/post/centos/11.jpg" alt title="reload"></p>
+<p>到這邊我們就完成MariaDB的初始化設定</p>
+<p>自動啟動MariaDB</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo systemctl enable mariadb.service</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-4"><a href="#Step-4" class="headerlink" title="Step 4"></a>Step 4</h2><h3 id="安裝epel-release"><a href="#安裝epel-release" class="headerlink" title="安裝epel-release"></a>安裝epel-release</h3><p>安裝epel-release<br>這算是一個附加軟體包</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ yum install epel-release</span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/post/centos/12.jpg" alt title="release"></p>
+<p>一樣輸入 Y 並按下[ Enter ] 。</p>
+<p>接著執行此段，這樣我們才有辦法安裝PHP7</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm</span><br></pre></td></tr></table></figure>
+
+<h3 id="安裝PHP7"><a href="#安裝PHP7" class="headerlink" title="安裝PHP7"></a>安裝PHP7</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo yum install php70w</span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/post/centos/13.jpg" alt title="PHP 7"></p>
+<p>再等一小段時間後，便會看到 Complete! 字樣。</p>
+<h3 id="測試PHP"><a href="#測試PHP" class="headerlink" title="測試PHP"></a>測試PHP</h3><p>可以透過這個指令來測試我們安裝的PHP:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ php -v</span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/post/centos/14.jpg" alt title="PHP -v"></p>
+<h3 id="安裝PHP擴充模組"><a href="#安裝PHP擴充模組" class="headerlink" title="安裝PHP擴充模組"></a>安裝PHP擴充模組</h3><p>下面將會安裝一些PHP常會用到的擴充模組，若沒有需求此部分可跳過</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ yum install php70w-mbstring php70w-json php70w-gd php70w-mcrypt</span><br></pre></td></tr></table></figure>
+
+<p>這邊是我會用到的擴充模組，若沒有使用到可以跳過此步驟</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ yum search php70</span><br></pre></td></tr></table></figure>
+
+<h2 id="Step-5"><a href="#Step-5" class="headerlink" title="Step 5"></a>Step 5</h2><h3 id="測試網站"><a href="#測試網站" class="headerlink" title="測試網站"></a>測試網站</h3><p>在前面我們已經順利將 Apache 、 PHP 、 MariaDB 安裝完成。現在我們可以開始測試網站伺服器是否有架設成功。</p>
+<p>查詢ip   </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo ip addr show</span><br></pre></td></tr></table></figure>
+
+<p>在正式環境下我們應該會看到 eth0 的裝置，但虛擬機下應該只會看到 enp0s3 裝置。</p>
+<p>且此裝置的ip是一個很奇怪的ip ( 10.0.2.15 ) ，我們在實體主機的瀏覽器下輸入這個ip，會發現是沒有用處的!!</p>
+<p><img src="/image/post/centos/15.jpg" alt title="ip"></p>
+<p>這時我們要修改我們的虛擬機網路設定</p>
+<p>點選虛擬機-&gt;設定值-&gt;網路-&gt;點選附加到橋接介面卡&gt;確定</p>
+<h3 id="重新啟動系統"><a href="#重新啟動系統" class="headerlink" title="重新啟動系統"></a>重新啟動系統</h3><p>。輸入以下指令，重新啟動:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ reboot</span><br></pre></td></tr></table></figure>
+
+<h3 id="重新查詢虛擬機ip"><a href="#重新查詢虛擬機ip" class="headerlink" title="重新查詢虛擬機ip"></a>重新查詢虛擬機ip</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo ip addr show</span><br></pre></td></tr></table></figure>
+
+<p>接下來，我們再次查詢虛擬機的ip，會發現到enp0s3這個的ip已經變成正常的區域網路ip了</p>
+<p><img src="/image/post/centos/16.jpg" alt title="new ipconfig"></p>
+<h2 id="Step-6"><a href="#Step-6" class="headerlink" title="Step 6"></a>Step 6</h2><h3 id="訪問測試網站"><a href="#訪問測試網站" class="headerlink" title="訪問測試網站"></a>訪問測試網站</h3><p>現在我們可以用實體主機開啟瀏覽器，輸入上圖ip造訪測試網站。</p>
+<p>一個是出現下圖畫面，恭喜你成功了<br>如果沒有看來可能是沒有啟動防火牆</p>
+<h3 id="安裝防火牆"><a href="#安裝防火牆" class="headerlink" title="安裝防火牆"></a>安裝防火牆</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ yum install firewalld</span><br></pre></td></tr></table></figure>
+
+<h3 id="啟動防火牆"><a href="#啟動防火牆" class="headerlink" title="啟動防火牆"></a>啟動防火牆</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ systemctl start firewalld</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看防火牆狀態"><a href="#查看防火牆狀態" class="headerlink" title="查看防火牆狀態"></a>查看防火牆狀態</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ systemctl status firewalld</span><br></pre></td></tr></table></figure>
+
+<p><img src="/image/post/centos/17.jpg" alt title="firewall"></p>
+<p>但您有可能會有很大的機率是看到錯誤畫面。一般來說都是因為被防火牆給擋住了，所以我們必須設定防火牆。</p>
+<p>我在這裡是直接將防火牆給關閉了，因為是自己用的環境麻~</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ systemctl stop firewalld</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ systemctl disable firewalld</span><br></pre></td></tr></table></figure>
+
+<p>重新啟動防火牆</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ firewall-cmd --reload</span><br></pre></td></tr></table></figure>
+
+<p>再次造訪測試網站，應該就可以正常訪問了。</p>
+<h3 id="安裝phpMyAdmin"><a href="#安裝phpMyAdmin" class="headerlink" title="安裝phpMyAdmin"></a>安裝phpMyAdmin</h3><p>phpMyAdmin算是最常見的MySQL管理工具了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo yum install phpMyAdmin</span><br></pre></td></tr></table></figure>
+
+<p>接著我們用實體電腦輸入 測試網站的ip + phpMyAdmin 會發現進不去</p>
+<p><a href="http://192.168.1.0/phpMyAdmin" target="_blank" rel="noopener">http://192.168.1.0/phpMyAdmin</a></p>
+<p>原因是因為，phpMyAdmin預設只允許透過本地登入(localhost)，所以我們需要修改一下設定</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo vim /etc/httpd/conf.d/phpMyAdmin.conf</span><br></pre></td></tr></table></figure>
+
+<p>我們會透過vim文字編輯器進入到phpMyAdmin.conf文件內 (如下圖)</p>
+<p><img src="/image/post/centos/18.jpg" alt title="phpmyadmin"></p>
+<p>移動光標，到下圖位置。將require ip 127.0.0.1 和 require ip :: 1 前面加上 「#」，並在下面加上</p>
+<p>require all granted</p>
+<p><img src="/image/post/centos/19.jpg" alt title="require"></p>
+<p>輸入「:wq 」後，在按下 enter 就可以存檔並退出了</p>
+<p>瀏覽器前往phpMyAdmin<br>當我們再次前往 http:// “ip位置” /phpMyAdmin 便可以成功進入了</p>
+<h3 id="Apache配置"><a href="#Apache配置" class="headerlink" title="Apache配置"></a>Apache配置</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo vim /etc/httpd/conf/httpd.conf</span><br></pre></td></tr></table></figure>
+
+<p>允許.htaccess<br>找到 &lt;directory “/var/www/html” &gt; ，附近有 AllowOverride None 改成 AllowOverride All</p>
+<p><img src="/image/post/centos/20.jpg" alt title="html"></p>
+<h3 id="PHP配置"><a href="#PHP配置" class="headerlink" title="PHP配置"></a>PHP配置</h3><p>進入到php配置文件</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo vim /etc/php.ini</span><br></pre></td></tr></table></figure>
+
+<p>允許短標籤<br>將short_open_tag 改成 On</p>
+<p><img src="/image/post/centos/21.jpg" alt title="phpini"></p>
+<h3 id="接著要重新啟動-Appache-和-MariaDB"><a href="#接著要重新啟動-Appache-和-MariaDB" class="headerlink" title="接著要重新啟動 Appache 和 MariaDB"></a>接著要重新啟動 Appache 和 MariaDB</h3><h3 id="重新啟動-Appache"><a href="#重新啟動-Appache" class="headerlink" title="重新啟動 Appache"></a>重新啟動 Appache</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ systemctl restart httpd.service</span><br></pre></td></tr></table></figure>
+
+<h3 id="重新啟動-MariaDB"><a href="#重新啟動-MariaDB" class="headerlink" title="重新啟動 MariaDB"></a>重新啟動 MariaDB</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ systemctl restart mariadb.service</span><br></pre></td></tr></table></figure>
+
+<h3 id="測試PHP-1"><a href="#測試PHP-1" class="headerlink" title="測試PHP"></a>測試PHP</h3><p>讓我們在網站伺服器內建立一個新的文件</p>
+<p>切換到網站目錄</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cd /var/www/html</span><br></pre></td></tr></table></figure>
+
+<p>建立新文件 test.php</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ sudo vi test.php</span><br></pre></td></tr></table></figure>
+
+<p>輸入 hello world 或 phpinfo() 或其它內容</p>
+<p><img src="/image/post/centos/22.jpg" alt title="phpini"></p>
+<p>瀏覽器訪問測試網站<br>http:// “ip位置” /test.php</p>
+<p>測試成功 ！！　</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/07/18/Garbage-Collection-介紹/" data-toggle="tooltip" data-placement="top"
+                           title="Garbage Collection 介紹">&larr; Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+
+                <!--加入新的评论系统-->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-text">Quick Start</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-1"><span class="toc-text">Step 1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-2"><span class="toc-text">Step 2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安裝Apache"><span class="toc-text">安裝Apache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#啟動Apache"><span class="toc-text">啟動Apache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#設定Apache，隨CentOS開機自動啟動"><span class="toc-text">設定Apache，隨CentOS開機自動啟動</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-3"><span class="toc-text">Step 3</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安裝MariaDB"><span class="toc-text">安裝MariaDB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#啟動MariaDB"><span class="toc-text">啟動MariaDB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#設定初始化MariaDB"><span class="toc-text">設定初始化MariaDB</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-4"><span class="toc-text">Step 4</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安裝epel-release"><span class="toc-text">安裝epel-release</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安裝PHP7"><span class="toc-text">安裝PHP7</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#測試PHP"><span class="toc-text">測試PHP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安裝PHP擴充模組"><span class="toc-text">安裝PHP擴充模組</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-5"><span class="toc-text">Step 5</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#測試網站"><span class="toc-text">測試網站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重新啟動系統"><span class="toc-text">重新啟動系統</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重新查詢虛擬機ip"><span class="toc-text">重新查詢虛擬機ip</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Step-6"><span class="toc-text">Step 6</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#訪問測試網站"><span class="toc-text">訪問測試網站</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安裝防火牆"><span class="toc-text">安裝防火牆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#啟動防火牆"><span class="toc-text">啟動防火牆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看防火牆狀態"><span class="toc-text">查看防火牆狀態</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安裝phpMyAdmin"><span class="toc-text">安裝phpMyAdmin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache配置"><span class="toc-text">Apache配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP配置"><span class="toc-text">PHP配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#接著要重新啟動-Appache-和-MariaDB"><span class="toc-text">接著要重新啟動 Appache 和 MariaDB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重新啟動-Appache"><span class="toc-text">重新啟動 Appache</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重新啟動-MariaDB"><span class="toc-text">重新啟動 MariaDB</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#測試PHP-1"><span class="toc-text">測試PHP</span></a></li></ol></li></ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#LAMP"
+                           title="LAMP">LAMP</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
+    </div>
+</article>
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "wulojason";
+    var disqus_identifier = "https://ricechuang.github.io/2019/06/28/centos-php7-mariadb/";
+    var disqus_url = "https://ricechuang.github.io/2019/06/28/centos-php7-mariadb/";
+
+    (function () {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/profile.php?id=100000111348890">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/riceChuang">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://www.linkedin.com/in/jason-chuang-654296177">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; WuluJason 2022
+                    <br>
+                    Theme by Haojen Ma
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://ricechuang.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-142468522-1';
+    var _gaDomain = 'auto';
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="">
+</body>
+
+</html>
