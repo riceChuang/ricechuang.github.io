@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇰🇷 首爾口袋名單 · EAT / COFFEE / SHOP</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg2: #f5f5f0; --bg3: #ededea;
+    --text: #1a1a18; --text2: #6b6b66; --text3: #9a9a94;
+    --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.18);
+    --eat: #e84e1b; --eat-bg: #fef0ec; --eat-border: #f9c4b3;
+    --coffee: #7c5c3c; --coffee-bg: #f8f0e8; --coffee-border: #dbc8ad;
+    --shop: #2563eb; --shop-bg: #eff5ff; --shop-border: #b4d0fa;
+    --radius: 8px; --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a; --bg2: #252523; --bg3: #2e2e2b;
+      --text: #e8e6de; --text2: #9a9a94; --text3: #6b6b66;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.18);
+      --eat: #f4845f; --eat-bg: #3d1a0a; --eat-border: #6b2a10;
+      --coffee: #c9a87c; --coffee-bg: #2e2418; --coffee-border: #5a4530;
+      --shop: #6ea8fe; --shop-bg: #0d1f3c; --shop-border: #1a3a6b;
+    }
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg3); color: var(--text);
+    min-height: 100vh; padding: 1.5rem 1rem 3rem;
+  }
+  .wrapper { max-width: 680px; margin: 0 auto; }
+
+  .site-header { text-align: center; margin-bottom: 1.5rem; }
+  .site-header h1 { font-size: 22px; font-weight: 500; }
+  .site-header p { font-size: 13px; color: var(--text2); margin-top: 5px; }
+
+  .back-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 12px; color: var(--text2); text-decoration: none;
+    margin-bottom: 1rem;
+  }
+  .back-link:hover { color: var(--text); }
+
+  /* Category filter */
+  .cat-filters { display: flex; gap: 6px; margin-bottom: 1rem; flex-wrap: wrap; }
+  .cat-btn {
+    padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+    cursor: pointer; border: 1.5px solid; transition: all 0.15s; user-select: none;
+  }
+  .cat-btn[data-cat="all"] { border-color: var(--border2); color: var(--text2); background: var(--bg); }
+  .cat-btn[data-cat="all"].active { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .cat-btn[data-cat="eat"] { border-color: var(--eat-border); color: var(--eat); background: var(--bg); }
+  .cat-btn[data-cat="eat"].active { background: var(--eat-bg); border-color: var(--eat); }
+  .cat-btn[data-cat="coffee"] { border-color: var(--coffee-border); color: var(--coffee); background: var(--bg); }
+  .cat-btn[data-cat="coffee"].active { background: var(--coffee-bg); border-color: var(--coffee); }
+  .cat-btn[data-cat="shop"] { border-color: var(--shop-border); color: var(--shop); background: var(--bg); }
+  .cat-btn[data-cat="shop"].active { background: var(--shop-bg); border-color: var(--shop); }
+
+  /* Area section */
+  .area-section { margin-bottom: 1.5rem; }
+  .area-title {
+    font-size: 13px; font-weight: 500; color: var(--text2);
+    letter-spacing: 0.04em; margin-bottom: 0.6rem;
+    padding-bottom: 6px; border-bottom: 0.5px solid var(--border);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .area-count {
+    font-size: 10px; background: var(--bg2); color: var(--text3);
+    padding: 1px 7px; border-radius: 8px;
+  }
+
+  /* Spot card */
+  .spot {
+    background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius);
+    padding: 10px 13px; margin-bottom: 8px; transition: border-color 0.15s;
+    display: flex; align-items: flex-start; gap: 10px;
+  }
+  .spot:hover { border-color: var(--border2); }
+  .spot.hidden { display: none; }
+  .spot-icon { font-size: 18px; flex-shrink: 0; padding-top: 1px; }
+  .spot-body { flex: 1; min-width: 0; }
+  .spot-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .spot-name { font-size: 14px; font-weight: 500; }
+  .spot-tag {
+    font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 8px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .spot-tag.eat { background: var(--eat-bg); color: var(--eat); }
+  .spot-tag.coffee { background: var(--coffee-bg); color: var(--coffee); }
+  .spot-tag.shop { background: var(--shop-bg); color: var(--shop); }
+  .spot-addr { font-size: 11px; color: var(--text3); margin-top: 3px; }
+  .spot-link {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 11px; color: #1ec800; text-decoration: none;
+    margin-top: 5px; padding: 2px 8px;
+    border: 0.5px solid #1ec80044; border-radius: 8px;
+    background: #1ec80010; transition: opacity 0.15s;
+  }
+  .spot-link:hover { opacity: 0.7; }
+
+  .summary {
+    background: var(--bg); border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-top: 1.5rem;
+  }
+  .summary-title { font-size: 13px; font-weight: 500; margin-bottom: 6px; }
+  .summary-body { font-size: 12px; color: var(--text2); line-height: 1.8; }
+
+  .area-section.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <a class="back-link" href="./index.html">← 回到五日行程</a>
+
+  <div class="site-header">
+    <h1>📍 首爾口袋名單</h1>
+    <p>Naver Map 收藏 · 依地區分類 · 點擊直接導航</p>
+  </div>
+
+  <div class="cat-filters">
+    <div class="cat-btn active" data-cat="all" onclick="filterCat('all')">全部 <b>52</b></div>
+    <div class="cat-btn" data-cat="eat" onclick="filterCat('eat')">🍽 EAT <b>33</b></div>
+    <div class="cat-btn" data-cat="coffee" onclick="filterCat('coffee')">☕ COFFEE <b>4</b></div>
+    <div class="cat-btn" data-cat="shop" onclick="filterCat('shop')">🛍 SHOP <b>15</b></div>
+  </div>
+
+  <!-- 明洞 / 忠武路 -->
+  <div class="area-section" data-area="myeongdong">
+    <div class="area-title">📌 明洞 · 忠武路 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍜</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">백옥 명동</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 중구 명동8길 8-23</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1604370045" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍜</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">미성옥</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 중구 명동길 25-11</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/11727415" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">📸</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">코닥 명동센터샵</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 중구 명동8길 13</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1933450376" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">⛺</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">스노우피크 명동점</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 중구 명동6길 14</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/2074023681" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">⛺</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">스노우피크 롯데본점</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 중구 남대문로 81</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1191820022" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">⛺</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">스노우피크 신세계百貨 本店</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 중구 퇴계로 77</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1026334365" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 忠武路 / 南山 -->
+  <div class="area-section" data-area="namsan">
+    <div class="area-title">📌 南山 · 忠武路周邊 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍲</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">목멱산방</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 중구 퇴계로20길 71</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/13573290" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 乙支路 / 鍾路 / 光化門 -->
+  <div class="area-section" data-area="jongno">
+    <div class="area-title">📌 乙支路 · 鍾路 · 光化門 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🐔</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">효계 을지로점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 중구 을지로12길 17</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1970041528" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🥩</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">산청숯불가든 을지로</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 중구 을지로 114-6</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1850187827" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🥩</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">산청숯불가든 을지로 2호점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 중구 을지로14길 12</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1069950349" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍗</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">종로계림닭도리탕원조 본점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 종로구 돈화문로4길 39</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/33068253" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">☕</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">조앤도슨 광화문점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 종로구 종로 33</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/2077817507" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 景福宮 / 北村 / 西村 / 益善洞 -->
+  <div class="area-section" data-area="bukchon">
+    <div class="area-title">📌 景福宮 · 北村 · 西村 · 益善洞 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍞</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">아티스트베이커리 안국</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 종로구 율곡로 45</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1741938125" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍞</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">술화덕빵</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 종로구 자하문로1나길 23</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/36639715" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🥩</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">뼈탄집 서촌본점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 종로구 자하문로1길 13</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1488058730" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍝</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">도시바 서순라길점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 종로구 서순라길 137</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1348518111" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 弘大 / 延南洞 / 新村 -->
+  <div class="area-section" data-area="hongdae">
+    <div class="area-title">📌 弘大 · 延南洞 · 新村 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍳</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">평화연남</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 마포구 동교로 254-1</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1874989869" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🐟</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">풍천장어 연남점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 마포구 동교로27길 39</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/11824418" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🐟</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">풍천장어 연남2호점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 마포구 월드컵북로6길 57</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1312103722" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍝</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">오뗄드꾸뜨</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 마포구 동교로46길 7</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1577648959" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍖</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">소신이쏘 신촌본점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 서대문구 연세로5가길 19</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/36324567" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="coffee">
+      <div class="spot-icon">☕</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">파롤앤랑그</div><div class="spot-tag coffee">COFFEE</div></div>
+        <div class="spot-addr">서울 마포구 성미산로29안길 8</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1830575633" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 孔德 -->
+  <div class="area-section" data-area="gongdeok">
+    <div class="area-title">📌 孔德 · 麻浦 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🦶</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">마포왕족발</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 마포구 공덕동 256-43</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/19886003" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🥓</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">영광보쌈</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 마포구 만리재로1길 14</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/13159261" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 首爾站 -->
+  <div class="area-section" data-area="seoul-station">
+    <div class="area-title">📌 首爾站 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">⛺</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">스노우피크 롯데아울렛 서울역점</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 용산구 한강대로 405</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1376577452" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 龍山 / 漢南 / 梨泰院 -->
+  <div class="area-section" data-area="yongsan">
+    <div class="area-title">📌 龍山 · 漢南 · 梨泰院 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🥩</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">뼈탄집 용산직영점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 용산구 백범로99길 62</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1231861830" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍜</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">난포 한남</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 용산구 이태원로49길 18</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1351826018" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍞</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">바게티</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 용산구 한강대로40길 55</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/2036788171" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍢</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">용산오뎅</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 용산구 한강대로15길 28</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1646306243" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 東大門 / 往十里 -->
+  <div class="area-section" data-area="dongdaemun">
+    <div class="area-title">📌 東大門 · 往十里 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🌶️</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">악어떡볶이</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 성동구 마조로 33</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/36210603" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">⛺</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">스노우피크 현대아울렛 동대문점</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 중구 장충단로13길 20</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1791408766" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">⛺</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">스노우피크 던던동대문점</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 중구 을지로 264</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1525617180" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 聖水洞 -->
+  <div class="area-section" data-area="seongsu">
+    <div class="area-title">📌 聖水洞 · 首爾林 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🐚</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">조개도</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 성동구 성덕정17길 8-1</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1475051360" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🐷</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">하남돼지집 성수역점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 성동구 아차산로 85</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/35316961" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍲</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">소문난성수감자탕</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 성동구 연무장길 45</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/11721256" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍖</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">꿉당 성수점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 성동구 성수이로20길 10</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1739440199" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍞</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">스탠다드브레드 성수</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 성동구 성수이로18길 37</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1720159258" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="coffee">
+      <div class="spot-icon">☕</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">자연도소금빵in 성수</div><div class="spot-tag coffee">COFFEE</div></div>
+        <div class="spot-addr">서울 성동구 연무장길 56-1</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1022429915" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="coffee">
+      <div class="spot-icon">☕</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">베통 성수</div><div class="spot-tag coffee">COFFEE</div></div>
+        <div class="spot-addr">서울 성동구 연무장7가길 8</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/365858525" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">😎</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">젠틀몬스터 포켓팝업 성수점</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 성동구 성수이로7길 26</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/2038481891" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">👕</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">세터하우스 서울숲</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 성동구 상원1길 5</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1498214224" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">👕</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">세터하우스 성수</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 성동구 연무장17길 6</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1366678933" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">👗</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">이미스 플래그십 스토어 성수</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 성동구 연무장길 29-17</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1466575776" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">🎨</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">아더에러 성수 스페이스</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 성동구 성수이로 82</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1965484876" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 狎鷗亭 / 清潭 / 道山 -->
+  <div class="area-section" data-area="apgujeong">
+    <div class="area-title">📌 狎鷗亭 · 清潭 · 道山 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍜</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">면서울</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 강남구 선릉로 805</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1881172296" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍚</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">솔솥 청담점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 강남구 도산대로53길 16</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1877621159" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="coffee">
+      <div class="spot-icon">🥯</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">런던베이글뮤지엄 도산</div><div class="spot-tag coffee">COFFEE</div></div>
+        <div class="spot-addr">서울 강남구 언주로168길 33</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1967647240" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">🛹</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">스투시</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 강남구 압구정로46길 78</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/2081206882" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">👔</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">준지 도산 플래그십 스토어</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 강남구 언주로164길 23</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1052548695" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+
+    <div class="spot" data-cat="shop">
+      <div class="spot-icon">👟</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">웍스아웃 압구정점</div><div class="spot-tag shop">SHOP</div></div>
+        <div class="spot-addr">서울 강남구 선릉로157길 20-4</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/33647101" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 江南 -->
+  <div class="area-section" data-area="gangnam">
+    <div class="area-title">📌 江南站 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🥩</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">뼈탄집 강남역점</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 강남구 강남대로78길 16</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/1545837622" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 永登浦 -->
+  <div class="area-section" data-area="yeongdeungpo">
+    <div class="area-title">📌 永登浦 <span class="area-count"></span></div>
+
+    <div class="spot" data-cat="eat">
+      <div class="spot-icon">🍲</div>
+      <div class="spot-body">
+        <div class="spot-top"><div class="spot-name">아우네장터순대국</div><div class="spot-tag eat">EAT</div></div>
+        <div class="spot-addr">서울 영등포구 영중로14길 19-1</div>
+        <a class="spot-link" href="https://map.naver.com/p/entry/place/32316056" target="_blank">🗺 Naver Map</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-title">📌 使用說明</div>
+    <div class="summary-body">
+      🗺 點「Naver Map」直接開啟導航<br>
+      🏷 用上方分類按鈕篩選 EAT / COFFEE / SHOP<br>
+      📍 地點依地區分組，方便同區域一起逛<br>
+      ← 點左上角回到五日行程表
+    </div>
+  </div>
+
+</div>
+<script>
+function filterCat(cat) {
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+  document.querySelectorAll('.spot').forEach(s => {
+    s.classList.toggle('hidden', cat !== 'all' && s.dataset.cat !== cat);
+  });
+  // Hide area sections with no visible spots
+  document.querySelectorAll('.area-section').forEach(sec => {
+    const visible = sec.querySelectorAll('.spot:not(.hidden)').length;
+    sec.classList.toggle('hidden', visible === 0);
+  });
+  updateCounts();
+}
+function updateCounts() {
+  document.querySelectorAll('.area-section').forEach(sec => {
+    const count = sec.querySelectorAll('.spot:not(.hidden)').length;
+    const badge = sec.querySelector('.area-count');
+    if (badge) badge.textContent = count + ' 個地點';
+  });
+}
+updateCounts();
+</script>
+</body>
+</html>
