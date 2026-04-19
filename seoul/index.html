@@ -87,16 +87,35 @@
   .summary-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; }
   .summary-body { font-size: 12px; color: var(--text2); line-height: 1.9; }
 
-  /* Pocket list */
-  .pocket { margin-top: 1.25rem; }
-  .pocket-header { font-size: 12px; font-weight: 500; color: var(--text2); padding: 8px 0; border-top: 0.5px solid var(--border); display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
-  .pocket-header .arrow { transition: transform 0.2s; font-size: 10px; }
-  .pocket-header.open .arrow { transform: rotate(90deg); }
-  .pocket-count { font-size: 10px; background: var(--bg2); color: var(--text3); padding: 1px 7px; border-radius: 8px; margin-left: auto; }
-  .pocket-body { display: none; padding-top: 6px; }
-  .pocket-header.open + .pocket-body { display: block; }
-  .pocket-area { font-size: 10px; font-weight: 500; color: var(--text3); letter-spacing: 0.04em; margin: 10px 0 5px; padding-bottom: 3px; }
-  .pocket-area:first-child { margin-top: 0; }
+  /* Alternatives carousel */
+  .alts-label { font-size: 10px; color: var(--text3); margin: 6px 0 4px; display: flex; align-items: center; gap: 4px; }
+  .alts-label::after { content: '← 左右滑動 →'; font-size: 9px; opacity: 0.6; margin-left: auto; }
+  .alts {
+    display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory;
+    padding: 4px 0 8px; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .alts::-webkit-scrollbar { display: none; }
+  .alt {
+    scroll-snap-align: start; min-width: 155px; max-width: 180px; flex-shrink: 0;
+    background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius);
+    padding: 9px 11px; transition: border-color 0.15s; text-decoration: none; color: var(--text);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .alt:hover { border-color: var(--border2); }
+  .alt-top { display: flex; align-items: center; gap: 5px; }
+  .alt-icon { font-size: 14px; }
+  .alt-name { font-size: 12px; font-weight: 500; line-height: 1.3; }
+  .alt-desc { font-size: 10px; color: var(--text2); line-height: 1.4; }
+  .alt-tag {
+    font-size: 9px; font-weight: 600; padding: 1px 6px; border-radius: 5px;
+    align-self: flex-start; margin-top: 2px;
+  }
+  .alt-tag.eat { background: var(--eat-bg); color: var(--eat); }
+  .alt-tag.coffee { background: var(--coffee-bg); color: var(--coffee); }
+  .alt-tag.shop { background: var(--shop-bg); color: var(--shop); }
+
+  /* Keep pocket for "others" tab */
+  .pocket-area { font-size: 10px; font-weight: 500; color: var(--text3); letter-spacing: 0.04em; margin: 10px 0 5px; }
   .pk { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 8px 11px; margin-bottom: 6px; display: flex; align-items: center; gap: 9px; transition: border-color 0.15s; }
   .pk:hover { border-color: var(--border2); }
   .pk-icon { font-size: 15px; flex-shrink: 0; }
@@ -197,6 +216,14 @@
         <a class="map-btn" href="https://naver.me/GYmAjyWE" target="_blank">📍 Naver Map 廣藏市場</a>
       </div></div>
 
+      <div class="alts-label">🍽 廣藏市場附近也可以吃</div>
+      <div class="alts">
+        <a class="alt" href="https://map.naver.com/p/search/효계%20을지로" target="_blank"><div class="alt-top"><span class="alt-icon">🍗</span><span class="alt-name">孝桂 乙支路</span></div><div class="alt-desc">醬油炸雞名店</div><span class="alt-tag eat">EAT</span></a>
+        <a class="alt" href="https://map.naver.com/p/search/산청숯불가든%20을지로" target="_blank"><div class="alt-top"><span class="alt-icon">🥩</span><span class="alt-name">山清炭火花園</span></div><div class="alt-desc">韓牛炭烤·老字號</div><span class="alt-tag eat">EAT</span></a>
+        <a class="alt" href="https://map.naver.com/p/search/종로계림닭도리탕" target="_blank"><div class="alt-top"><span class="alt-icon">🍗</span><span class="alt-name">桂林辣燉雞</span></div><div class="alt-desc">辣燉雞元祖·超下飯</div><span class="alt-tag eat">EAT</span></a>
+        <a class="alt" href="https://map.naver.com/p/search/도시바%20서순라길" target="_blank"><div class="alt-top"><span class="alt-icon">🍝</span><span class="alt-name">Doshiba 益善洞</span></div><div class="alt-desc">義大利麵·人氣西餐</div><span class="alt-tag eat">EAT</span></a>
+      </div>
+
       <div class="label">⭐ 新增：步行8分鐘前往益善洞</div>
 
       <div class="stop"><div class="stop-dot hl"></div><div class="stop-card">
@@ -228,6 +255,14 @@
         <a class="map-btn" href="https://naver.me/GFpP5b8h" target="_blank">📍 Naver Map Cafe Onion</a>
       </div></div>
 
+      <div class="alts-label">🍽 景福宮/北村附近也可以吃</div>
+      <div class="alts">
+        <a class="alt" href="https://map.naver.com/p/search/아티스트베이커리%20안국" target="_blank"><div class="alt-top"><span class="alt-icon">🍞</span><span class="alt-name">Artist Bakery 安國</span></div><div class="alt-desc">手工可頌·麵包控必去</div><span class="alt-tag eat">EAT</span></a>
+        <a class="alt" href="https://map.naver.com/p/search/술화덕빵" target="_blank"><div class="alt-top"><span class="alt-icon">🍞</span><span class="alt-name">酒窯麵包 西村</span></div><div class="alt-desc">窯烤麵包·巷弄藏店</div><span class="alt-tag eat">EAT</span></a>
+        <a class="alt" href="https://map.naver.com/p/search/뼈탄집%20서촌" target="_blank"><div class="alt-top"><span class="alt-icon">🥩</span><span class="alt-name">骨炭家 西村本店</span></div><div class="alt-desc">排骨湯·軟嫩帶骨肉</div><span class="alt-tag eat">EAT</span></a>
+        <a class="alt" href="https://map.naver.com/p/search/조앤도슨%20광화문" target="_blank"><div class="alt-top"><span class="alt-icon">☕</span><span class="alt-name">Joe&Dough 光化門</span></div><div class="alt-desc">咖啡早午餐·三明治</div><span class="alt-tag eat">EAT</span></a>
+      </div>
+
       <div class="label">搭地鐵回明洞（安國→明洞，3號線2站）</div>
 
       <div class="stop"><div class="stop-dot hl"></div><div class="stop-card">
@@ -243,36 +278,15 @@
       </div></div>
 
     </div>
-    <div class="tip">這天行程最密但動線很順（一路往北再折回南）！體力不夠可跳過北村或南山塔二擇一。</div>
-
-    <!-- D2 pocket list -->
-    <div class="pocket">
-      <div class="pocket-header" onclick="this.classList.toggle('open')">
-        <span class="arrow">▶</span> 📍 附近口袋名單（附中文翻譯）<span class="pocket-count">16</span>
-      </div>
-      <div class="pocket-body">
-        <div class="pocket-area">🏙 明洞 · 忠武路 · 南山</div>
-        <div class="pk"><div class="pk-icon">🍜</div><div class="pk-body"><div class="pk-row"><span class="pk-name">백옥 명동</span><span class="pk-cn">白玉 明洞</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">刀削麵 · 韓式麵食老店</div></div><a class="pk-link" href="https://map.naver.com/p/search/백옥%20명동" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🍲</div><div class="pk-body"><div class="pk-row"><span class="pk-name">미성옥</span><span class="pk-cn">美成屋</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">雪濃湯名店 · 牛骨濃湯白飯</div></div><a class="pk-link" href="https://map.naver.com/p/search/미성옥%20명동" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🍵</div><div class="pk-body"><div class="pk-row"><span class="pk-name">목멱산방</span><span class="pk-cn">木覓山房</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">韓定食 · 南山山腳傳統韓食</div></div><a class="pk-link" href="https://map.naver.com/p/search/목멱산방" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">📸</div><div class="pk-body"><div class="pk-row"><span class="pk-name">코닥 명동센터샵</span><span class="pk-cn">Kodak 明洞店</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">底片相機 · 拍立得周邊</div></div><a class="pk-link" href="https://map.naver.com/p/search/코닥%20명동" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">⛺</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스노우피크 명동점</span><span class="pk-cn">Snow Peak 明洞</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">日本戶外品牌 · 露營裝備</div></div><a class="pk-link" href="https://map.naver.com/p/search/스노우피크%20명동" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">⛺</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스노우피크 롯데본점</span><span class="pk-cn">Snow Peak 樂天本店</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">在樂天百貨內</div></div><a class="pk-link" href="https://map.naver.com/p/search/스노우피크%20롯데본점" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">⛺</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스노우피크 신세계</span><span class="pk-cn">Snow Peak 新世界百貨</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">在新世界百貨內</div></div><a class="pk-link" href="https://map.naver.com/p/search/스노우피크%20신세계%20본점" target="_blank">🗺</a></div>
-
-        <div class="pocket-area">🏛 乙支路 · 鍾路（廣藏市場附近）</div>
-        <div class="pk"><div class="pk-icon">🍗</div><div class="pk-body"><div class="pk-row"><span class="pk-name">효계 을지로점</span><span class="pk-cn">孝桂 乙支路店</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">炸雞名店 · 醬油炸雞必吃</div></div><a class="pk-link" href="https://map.naver.com/p/search/효계%20을지로" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🥩</div><div class="pk-body"><div class="pk-row"><span class="pk-name">산청숯불가든</span><span class="pk-cn">山清炭火花園</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">韓牛炭烤 · 乙支路老字號烤肉</div></div><a class="pk-link" href="https://map.naver.com/p/search/산청숯불가든%20을지로" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🍗</div><div class="pk-body"><div class="pk-row"><span class="pk-name">종로계림닭도리탕</span><span class="pk-cn">鍾路桂林辣燉雞</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">辣燉雞元祖 · 一整鍋超下飯</div></div><a class="pk-link" href="https://map.naver.com/p/search/종로계림닭도리탕" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">☕</div><div class="pk-body"><div class="pk-row"><span class="pk-name">조앤도슨 광화문</span><span class="pk-cn">Joe&Dough 光化門</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">咖啡早午餐 · 輕食三明治</div></div><a class="pk-link" href="https://map.naver.com/p/search/조앤도슨%20광화문" target="_blank">🗺</a></div>
-
-        <div class="pocket-area">🏯 景福宮 · 北村 · 西村 · 益善洞</div>
-        <div class="pk"><div class="pk-icon">🍞</div><div class="pk-body"><div class="pk-row"><span class="pk-name">아티스트베이커리 안국</span><span class="pk-cn">Artist Bakery 安國</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">手工麵包 · 可頌推薦</div></div><a class="pk-link" href="https://map.naver.com/p/search/아티스트베이커리%20안국" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🍞</div><div class="pk-body"><div class="pk-row"><span class="pk-name">술화덕빵</span><span class="pk-cn">酒窯麵包</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">窯烤麵包 · 西村巷弄裡</div></div><a class="pk-link" href="https://map.naver.com/p/search/술화덕빵" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🥩</div><div class="pk-body"><div class="pk-row"><span class="pk-name">뼈탄집 서촌본점</span><span class="pk-cn">骨炭家 西村本店</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">排骨湯 · 軟嫩帶骨燉肉</div></div><a class="pk-link" href="https://map.naver.com/p/search/뼈탄집%20서촌" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🍝</div><div class="pk-body"><div class="pk-row"><span class="pk-name">도시바 서순라길</span><span class="pk-cn">Doshiba 益善洞</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">義大利麵 · 益善洞人氣西餐</div></div><a class="pk-link" href="https://map.naver.com/p/search/도시바%20서순라길" target="_blank">🗺</a></div>
-      </div>
+    <div class="alts-label">🛍 明洞逛街也可以去</div>
+    <div class="alts">
+      <a class="alt" href="https://map.naver.com/p/search/백옥%20명동" target="_blank"><div class="alt-top"><span class="alt-icon">🍜</span><span class="alt-name">白玉 明洞</span></div><div class="alt-desc">刀削麵·韓式麵食老店</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/미성옥%20명동" target="_blank"><div class="alt-top"><span class="alt-icon">🍲</span><span class="alt-name">美成屋</span></div><div class="alt-desc">雪濃湯·牛骨濃白湯</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/목멱산방" target="_blank"><div class="alt-top"><span class="alt-icon">🍵</span><span class="alt-name">木覓山房</span></div><div class="alt-desc">韓定食·南山山腳</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/코닥%20명동" target="_blank"><div class="alt-top"><span class="alt-icon">📸</span><span class="alt-name">Kodak 明洞</span></div><div class="alt-desc">底片相機·拍立得</div><span class="alt-tag shop">SHOP</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/스노우피크%20명동" target="_blank"><div class="alt-top"><span class="alt-icon">⛺</span><span class="alt-name">Snow Peak 明洞</span></div><div class="alt-desc">戶外露營品牌</div><span class="alt-tag shop">SHOP</span></a>
     </div>
+    <div class="tip">這天行程最密但動線很順（一路往北再折回南）！體力不夠可跳過北村或南山塔二擇一。</div>
   </div>
 
   <!-- ==================== D3 ==================== -->
@@ -313,23 +327,15 @@
         <a class="map-btn" href="https://map.naver.com/p/search/망원한강공원" target="_blank">📍 Naver Map</a>
       </div></div>
     </div>
-    <div class="tip">延南洞午餐選擇超多，邊逛邊吃！漢江公園也可以在便利商店買炸雞啤酒，不一定要外送。</div>
-
-    <!-- D3 pocket -->
-    <div class="pocket">
-      <div class="pocket-header" onclick="this.classList.toggle('open')">
-        <span class="arrow">▶</span> 📍 附近口袋名單 <span class="pocket-count">6</span>
-      </div>
-      <div class="pocket-body">
-        <div class="pocket-area">🎸 弘大 · 延南洞 · 新村</div>
-        <div class="pk"><div class="pk-icon">🍳</div><div class="pk-body"><div class="pk-row"><span class="pk-name">평화연남</span><span class="pk-cn">和平延南</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">韓式家庭料理 · 定食套餐</div></div><a class="pk-link" href="https://map.naver.com/p/search/평화연남" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🐟</div><div class="pk-body"><div class="pk-row"><span class="pk-name">풍천장어 연남점</span><span class="pk-cn">豐川鰻魚 延南店</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">炭烤鰻魚 · 滋補必吃</div></div><a class="pk-link" href="https://map.naver.com/p/search/풍천장어%20연남점" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🐟</div><div class="pk-body"><div class="pk-row"><span class="pk-name">풍천장어 연남2호점</span><span class="pk-cn">豐川鰻魚 延南2號店</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">同上（分店）</div></div><a class="pk-link" href="https://map.naver.com/p/search/풍천장어%20연남2호점" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🍝</div><div class="pk-body"><div class="pk-row"><span class="pk-name">오뗄드꾸뜨</span><span class="pk-cn">Hôtel de Couture</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">法式料理 · 氣氛餐廳</div></div><a class="pk-link" href="https://map.naver.com/p/search/오뗄드꾸뜨" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🍖</div><div class="pk-body"><div class="pk-row"><span class="pk-name">소신이쏘 신촌본점</span><span class="pk-cn">小信射燒 新村本店</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">韓式燒烤 · 牛五花套餐</div></div><a class="pk-link" href="https://map.naver.com/p/search/소신이쏘%20신촌" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">☕</div><div class="pk-body"><div class="pk-row"><span class="pk-name">파롤앤랑그</span><span class="pk-cn">Parole & Langue</span><span class="pk-tag coffee">COFFEE</span></div><div class="pk-desc">文青咖啡廳 · 手沖咖啡</div></div><a class="pk-link" href="https://map.naver.com/p/search/파롤앤랑그" target="_blank">🗺</a></div>
-      </div>
+    <div class="alts-label">🍽 弘大/延南洞午餐替代方案</div>
+    <div class="alts">
+      <a class="alt" href="https://map.naver.com/p/search/평화연남" target="_blank"><div class="alt-top"><span class="alt-icon">🍳</span><span class="alt-name">和平延南</span></div><div class="alt-desc">韓式家庭定食套餐</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/풍천장어%20연남점" target="_blank"><div class="alt-top"><span class="alt-icon">🐟</span><span class="alt-name">豐川鰻魚 延南</span></div><div class="alt-desc">炭烤鰻魚·滋補</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/오뗄드꾸뜨" target="_blank"><div class="alt-top"><span class="alt-icon">🍝</span><span class="alt-name">Hôtel de Couture</span></div><div class="alt-desc">法式料理·氣氛佳</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/소신이쏘%20신촌" target="_blank"><div class="alt-top"><span class="alt-icon">🍖</span><span class="alt-name">小信射燒 新村</span></div><div class="alt-desc">韓式燒烤·牛五花</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/파롤앤랑그" target="_blank"><div class="alt-top"><span class="alt-icon">☕</span><span class="alt-name">Parole & Langue</span></div><div class="alt-desc">文青咖啡·手沖</div><span class="alt-tag coffee">COFFEE</span></a>
     </div>
+    <div class="tip">延南洞午餐選擇超多，邊逛邊吃！漢江公園也可以在便利商店買炸雞啤酒，不一定要外送。</div>
   </div>
 
   <!-- ==================== D4 ==================== -->
@@ -362,34 +368,32 @@
         <a class="map-btn" href="https://map.naver.com/p/search/DDP%20동대문" target="_blank">📍 Naver Map</a>
       </div></div>
     </div>
-    <div class="tip">馬場洞一定帶現金！聖水洞留 3-4 小時慢慢逛，咖啡廳和潮牌都藏在巷子裡。</div>
-
-    <!-- D4 pocket -->
-    <div class="pocket">
-      <div class="pocket-header" onclick="this.classList.toggle('open')">
-        <span class="arrow">▶</span> 📍 附近口袋名單 <span class="pocket-count">15</span>
-      </div>
-      <div class="pocket-body">
-        <div class="pocket-area">🏭 聖水洞 · 首爾林</div>
-        <div class="pk"><div class="pk-icon">🐚</div><div class="pk-body"><div class="pk-row"><span class="pk-name">조개도</span><span class="pk-cn">蛤島</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">炭烤海鮮貝類 · 超鮮</div></div><a class="pk-link" href="https://map.naver.com/p/search/조개도%20성수" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🐷</div><div class="pk-body"><div class="pk-row"><span class="pk-name">하남돼지집 성수역점</span><span class="pk-cn">河南豬家 聖水站店</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">烤五花肉 · 韓國烤肉名店</div></div><a class="pk-link" href="https://map.naver.com/p/search/하남돼지집%20성수" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🍲</div><div class="pk-body"><div class="pk-row"><span class="pk-name">소문난성수감자탕</span><span class="pk-cn">遠近馳名聖水馬鈴薯燉骨湯</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">豬骨馬鈴薯鍋 · 湯濃肉爛</div></div><a class="pk-link" href="https://map.naver.com/p/search/소문난성수감자탕" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🍖</div><div class="pk-body"><div class="pk-row"><span class="pk-name">꿉당 성수점</span><span class="pk-cn">Kupdang 聖水店</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">韓式窯烤烤肉</div></div><a class="pk-link" href="https://map.naver.com/p/search/꿉당%20성수" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🍞</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스탠다드브레드 성수</span><span class="pk-cn">Standard Bread 聖水</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">手工麵包 · 巧巴達三明治</div></div><a class="pk-link" href="https://map.naver.com/p/search/스탠다드브레드%20성수" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🧂</div><div class="pk-body"><div class="pk-row"><span class="pk-name">자연도소금빵in 성수</span><span class="pk-cn">自然島鹽麵包 聖水</span><span class="pk-tag coffee">COFFEE</span></div><div class="pk-desc">鹽奶油麵包 · 外酥內爆漿</div></div><a class="pk-link" href="https://map.naver.com/p/search/자연도소금빵%20성수" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">☕</div><div class="pk-body"><div class="pk-row"><span class="pk-name">베통 성수</span><span class="pk-cn">Béton 聖水</span><span class="pk-tag coffee">COFFEE</span></div><div class="pk-desc">清水模咖啡廳 · 工業風</div></div><a class="pk-link" href="https://map.naver.com/p/search/베통%20성수" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">😎</div><div class="pk-body"><div class="pk-row"><span class="pk-name">젠틀몬스터 성수</span><span class="pk-cn">Gentle Monster 聖水</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">墨鏡潮牌 · 空間超好拍</div></div><a class="pk-link" href="https://map.naver.com/p/search/젠틀몬스터%20성수" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">👕</div><div class="pk-body"><div class="pk-row"><span class="pk-name">세터하우스 성수</span><span class="pk-cn">Satur House 聖水</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">韓國設計師服飾品牌</div></div><a class="pk-link" href="https://map.naver.com/p/search/세터하우스%20성수" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">👗</div><div class="pk-body"><div class="pk-row"><span class="pk-name">이미스 플래그십 성수</span><span class="pk-cn">EMIS 旗艦店 聖水</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">帽子/休閒服飾品牌</div></div><a class="pk-link" href="https://map.naver.com/p/search/이미스%20성수" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🎨</div><div class="pk-body"><div class="pk-row"><span class="pk-name">아더에러 성수</span><span class="pk-cn">Ader Error 聖水</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">韓國潮牌 · 藝術風空間</div></div><a class="pk-link" href="https://map.naver.com/p/search/아더에러%20성수" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">👕</div><div class="pk-body"><div class="pk-row"><span class="pk-name">세터하우스 서울숲</span><span class="pk-cn">Satur House 首爾林</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">同品牌另一間（首爾林旁）</div></div><a class="pk-link" href="https://map.naver.com/p/search/세터하우스%20서울숲" target="_blank">🗺</a></div>
-
-        <div class="pocket-area">🌃 東大門</div>
-        <div class="pk"><div class="pk-icon">🌶️</div><div class="pk-body"><div class="pk-row"><span class="pk-name">악어떡볶이</span><span class="pk-cn">鱷魚辣炒年糕</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">辣炒年糕老店 · 料多實在</div></div><a class="pk-link" href="https://map.naver.com/p/search/악어떡볶이" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">⛺</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스노우피크 현대아울렛 동대문</span><span class="pk-cn">Snow Peak 現代Outlet東大門</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">戶外品牌 · Outlet價格</div></div><a class="pk-link" href="https://map.naver.com/p/search/스노우피크%20현대아울렛%20동대문" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">⛺</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스노우피크 던던동대문</span><span class="pk-cn">Snow Peak DunDun東大門</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">同品牌另一間</div></div><a class="pk-link" href="https://map.naver.com/p/search/스노우피크%20던던%20동대문" target="_blank">🗺</a></div>
-      </div>
+    <div class="alts-label">🍽 聖水洞吃什麼</div>
+    <div class="alts">
+      <a class="alt" href="https://map.naver.com/p/search/하남돼지집%20성수" target="_blank"><div class="alt-top"><span class="alt-icon">🐷</span><span class="alt-name">河南豬家</span></div><div class="alt-desc">烤五花肉名店</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/조개도%20성수" target="_blank"><div class="alt-top"><span class="alt-icon">🐚</span><span class="alt-name">蛤島</span></div><div class="alt-desc">炭烤海鮮貝類</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/소문난성수감자탕" target="_blank"><div class="alt-top"><span class="alt-icon">🍲</span><span class="alt-name">聖水馬鈴薯燉骨湯</span></div><div class="alt-desc">豬骨鍋·湯濃肉爛</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/꿉당%20성수" target="_blank"><div class="alt-top"><span class="alt-icon">🍖</span><span class="alt-name">Kupdang 聖水</span></div><div class="alt-desc">韓式窯烤烤肉</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/스탠다드브레드%20성수" target="_blank"><div class="alt-top"><span class="alt-icon">🍞</span><span class="alt-name">Standard Bread</span></div><div class="alt-desc">手工麵包三明治</div><span class="alt-tag eat">EAT</span></a>
     </div>
+    <div class="alts-label">☕ 聖水洞喝咖啡</div>
+    <div class="alts">
+      <a class="alt" href="https://map.naver.com/p/search/자연도소금빵%20성수" target="_blank"><div class="alt-top"><span class="alt-icon">🧂</span><span class="alt-name">自然島鹽麵包</span></div><div class="alt-desc">鹽奶油·外酥內爆漿</div><span class="alt-tag coffee">COFFEE</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/베통%20성수" target="_blank"><div class="alt-top"><span class="alt-icon">☕</span><span class="alt-name">Béton 聖水</span></div><div class="alt-desc">清水模·工業風咖啡廳</div><span class="alt-tag coffee">COFFEE</span></a>
+    </div>
+    <div class="alts-label">🛍 聖水洞逛潮牌</div>
+    <div class="alts">
+      <a class="alt" href="https://map.naver.com/p/search/젠틀몬스터%20성수" target="_blank"><div class="alt-top"><span class="alt-icon">😎</span><span class="alt-name">Gentle Monster</span></div><div class="alt-desc">墨鏡潮牌·超好拍</div><span class="alt-tag shop">SHOP</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/아더에러%20성수" target="_blank"><div class="alt-top"><span class="alt-icon">🎨</span><span class="alt-name">Ader Error</span></div><div class="alt-desc">韓國潮牌·藝術空間</div><span class="alt-tag shop">SHOP</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/이미스%20성수" target="_blank"><div class="alt-top"><span class="alt-icon">👗</span><span class="alt-name">EMIS 旗艦店</span></div><div class="alt-desc">帽子/休閒服飾</div><span class="alt-tag shop">SHOP</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/세터하우스%20성수" target="_blank"><div class="alt-top"><span class="alt-icon">👕</span><span class="alt-name">Satur House</span></div><div class="alt-desc">韓國設計師服飾</div><span class="alt-tag shop">SHOP</span></a>
+    </div>
+    <div class="alts-label">🌃 東大門可以逛</div>
+    <div class="alts">
+      <a class="alt" href="https://map.naver.com/p/search/악어떡볶이" target="_blank"><div class="alt-top"><span class="alt-icon">🌶️</span><span class="alt-name">鱷魚辣炒年糕</span></div><div class="alt-desc">辣炒年糕老店</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/스노우피크%20현대아울렛%20동대문" target="_blank"><div class="alt-top"><span class="alt-icon">⛺</span><span class="alt-name">Snow Peak Outlet</span></div><div class="alt-desc">東大門·Outlet價</div><span class="alt-tag shop">SHOP</span></a>
+    </div>
+    <div class="tip">馬場洞一定帶現金！聖水洞留 3-4 小時慢慢逛，咖啡廳和潮牌都藏在巷子裡。</div>
   </div>
 
   <!-- ==================== D5 ==================== -->
@@ -424,25 +428,20 @@
         <div class="stop-note">從狎鷗亭回飯店：地鐵約35分鐘，計程車約25分鐘（15,000–20,000韓元）。<br><strong>建議 17:30 出發，留時間回飯店整理行李！</strong></div>
       </div></div>
     </div>
-    <div class="tip">狎鷗亭消費較高，記得保留韓元。OLIVE YOUNG D2 就買完了不用再跑！</div>
-
-    <!-- D5 pocket -->
-    <div class="pocket">
-      <div class="pocket-header" onclick="this.classList.toggle('open')">
-        <span class="arrow">▶</span> 📍 附近口袋名單 <span class="pocket-count">7</span>
-      </div>
-      <div class="pocket-body">
-        <div class="pocket-area">💎 狎鷗亭 · 清潭 · 道山</div>
-        <div class="pk"><div class="pk-icon">🍜</div><div class="pk-body"><div class="pk-row"><span class="pk-name">면서울</span><span class="pk-cn">麵首爾</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">手工拉麵 · 清爽湯頭</div></div><a class="pk-link" href="https://map.naver.com/p/search/면서울%20압구정" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🍚</div><div class="pk-body"><div class="pk-row"><span class="pk-name">솔솥 청담점</span><span class="pk-cn">松釜 清潭店</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">石鍋釜飯 · 鍋巴香脆</div></div><a class="pk-link" href="https://map.naver.com/p/search/솔솥%20청담" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🥯</div><div class="pk-body"><div class="pk-row"><span class="pk-name">런던베이글뮤지엄 도산</span><span class="pk-cn">London Bagel Museum 道山</span><span class="pk-tag coffee">COFFEE</span></div><div class="pk-desc">超人氣貝果 · 要排隊！</div></div><a class="pk-link" href="https://map.naver.com/p/search/런던베이글뮤지엄%20도산" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">🛹</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스투시</span><span class="pk-cn">Stüssy</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">美國街頭潮牌</div></div><a class="pk-link" href="https://map.naver.com/p/search/스투시%20압구정" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">👔</div><div class="pk-body"><div class="pk-row"><span class="pk-name">준지 도산 플래그십</span><span class="pk-cn">Juun.J 道山旗艦店</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">韓國設計師高端品牌</div></div><a class="pk-link" href="https://map.naver.com/p/search/준지%20도산" target="_blank">🗺</a></div>
-        <div class="pk"><div class="pk-icon">👟</div><div class="pk-body"><div class="pk-row"><span class="pk-name">웍스아웃 압구정</span><span class="pk-cn">Worksout 狎鷗亭</span><span class="pk-tag shop">SHOP</span></div><div class="pk-desc">潮流選物店 · 球鞋聖地</div></div><a class="pk-link" href="https://map.naver.com/p/search/웍스아웃%20압구정" target="_blank">🗺</a></div>
-        <div class="pocket-area">🏙 江南站</div>
-        <div class="pk"><div class="pk-icon">🥩</div><div class="pk-body"><div class="pk-row"><span class="pk-name">뼈탄집 강남역점</span><span class="pk-cn">骨炭家 江南站店</span><span class="pk-tag eat">EAT</span></div><div class="pk-desc">排骨湯 · 軟嫩帶骨燉肉</div></div><a class="pk-link" href="https://map.naver.com/p/search/뼈탄집%20강남" target="_blank">🗺</a></div>
-      </div>
+    <div class="alts-label">🍽 狎鷗亭/清潭午餐選擇</div>
+    <div class="alts">
+      <a class="alt" href="https://map.naver.com/p/search/면서울%20압구정" target="_blank"><div class="alt-top"><span class="alt-icon">🍜</span><span class="alt-name">麵首爾</span></div><div class="alt-desc">手工拉麵·清爽湯頭</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/솔솥%20청담" target="_blank"><div class="alt-top"><span class="alt-icon">🍚</span><span class="alt-name">松釜 清潭</span></div><div class="alt-desc">石鍋釜飯·鍋巴香脆</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/뼈탄집%20강남" target="_blank"><div class="alt-top"><span class="alt-icon">🥩</span><span class="alt-name">骨炭家 江南</span></div><div class="alt-desc">排骨湯·軟嫩帶骨肉</div><span class="alt-tag eat">EAT</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/런던베이글뮤지엄%20도산" target="_blank"><div class="alt-top"><span class="alt-icon">🥯</span><span class="alt-name">London Bagel Museum</span></div><div class="alt-desc">超人氣貝果·要排隊</div><span class="alt-tag coffee">COFFEE</span></a>
     </div>
+    <div class="alts-label">🛍 狎鷗亭/道山逛街</div>
+    <div class="alts">
+      <a class="alt" href="https://map.naver.com/p/search/스투시%20압구정" target="_blank"><div class="alt-top"><span class="alt-icon">🛹</span><span class="alt-name">Stüssy</span></div><div class="alt-desc">美國街頭潮牌</div><span class="alt-tag shop">SHOP</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/준지%20도산" target="_blank"><div class="alt-top"><span class="alt-icon">👔</span><span class="alt-name">Juun.J 道山旗艦</span></div><div class="alt-desc">韓國設計師高端品牌</div><span class="alt-tag shop">SHOP</span></a>
+      <a class="alt" href="https://map.naver.com/p/search/웍스아웃%20압구정" target="_blank"><div class="alt-top"><span class="alt-icon">👟</span><span class="alt-name">Worksout 狎鷗亭</span></div><div class="alt-desc">潮流選物·球鞋聖地</div><span class="alt-tag shop">SHOP</span></a>
+    </div>
+    <div class="tip">狎鷗亭消費較高，記得保留韓元。OLIVE YOUNG D2 就買完了不用再跑！</div>
   </div>
 
   <!-- ==================== Others ==================== -->
