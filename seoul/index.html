@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🇰🇷 首爾五日行程 4/23–4/27</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff;
+    --bg2: #f5f5f0;
+    --bg3: #ededea;
+    --text: #1a1a18;
+    --text2: #6b6b66;
+    --text3: #9a9a94;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --info-bg: #e6f1fb;
+    --info-text: #185fa5;
+    --info-border: #b5d4f4;
+    --warn-bg: #faeeda;
+    --warn-text: #854f0b;
+    --warn-border: #fac775;
+    --success-bg: #eaf3de;
+    --success-text: #3b6d11;
+    --success-border: #c0dd97;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg2: #252523;
+      --bg3: #2e2e2b;
+      --text: #e8e6de;
+      --text2: #9a9a94;
+      --text3: #6b6b66;
+      --border: rgba(255,255,255,0.1);
+      --border2: rgba(255,255,255,0.18);
+      --info-bg: #042c53;
+      --info-text: #85b7eb;
+      --info-border: #0c447c;
+      --warn-bg: #412402;
+      --warn-text: #fac775;
+      --warn-border: #633806;
+      --success-bg: #173404;
+      --success-text: #c0dd97;
+      --success-border: #27500a;
+    }
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg3);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 1.5rem 1rem 3rem;
+  }
+  .wrapper { max-width: 680px; margin: 0 auto; }
+
+  /* Header */
+  .site-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .site-header h1 { font-size: 22px; font-weight: 500; }
+  .site-header p { font-size: 13px; color: var(--text2); margin-top: 5px; }
+
+  /* Hotel card */
+  .hotel-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 12px 16px;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hotel-icon { font-size: 24px; flex-shrink: 0; }
+  .hotel-name { font-size: 14px; font-weight: 500; }
+  .hotel-detail { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .tab {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 0.5px solid var(--border2);
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text2);
+    background: var(--bg);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .tab:hover { border-color: var(--info-border); color: var(--info-text); }
+  .tab.active { background: var(--info-bg); color: var(--info-text); border-color: transparent; font-weight: 500; }
+
+  /* Day panel */
+  .day-panel { display: none; }
+  .day-panel.active { display: block; }
+
+  .day-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .day-badge {
+    background: var(--info-bg);
+    color: var(--info-text);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+  }
+  .day-title { font-size: 16px; font-weight: 500; margin-bottom: 2px; }
+  .day-subtitle { font-size: 12px; color: var(--text2); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 9px; top: 10px; bottom: 10px;
+    width: 1px;
+    background: var(--border);
+  }
+  .stop { position: relative; margin-bottom: 1.1rem; }
+  .stop-dot {
+    position: absolute;
+    left: -23px; top: 6px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border2);
+    background: var(--bg);
+  }
+  .stop-dot.hl { background: var(--info-bg); border-color: var(--info-border); }
+  .stop-dot.food { background: var(--warn-bg); border-color: var(--warn-border); }
+  .stop-dot.go { background: var(--success-bg); border-color: var(--success-border); }
+
+  .stop-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 13px;
+    transition: border-color 0.15s;
+  }
+  .stop-card:hover { border-color: var(--border2); }
+  .stop-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .stop-name { font-size: 14px; font-weight: 500; }
+  .stop-time { font-size: 11px; color: var(--text3); white-space: nowrap; padding-top: 2px; flex-shrink: 0; }
+  .stop-note { font-size: 12px; color: var(--text2); margin-top: 5px; line-height: 1.6; }
+  .stop-note strong { color: var(--text); font-weight: 500; }
+
+  .map-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--info-text);
+    text-decoration: none;
+    margin-top: 7px;
+    padding: 3px 9px;
+    border: 0.5px solid var(--info-border);
+    border-radius: 10px;
+    background: var(--info-bg);
+    transition: opacity 0.15s;
+  }
+  .map-btn:hover { opacity: 0.75; }
+
+  /* Transport block */
+  .transport {
+    background: var(--bg2);
+    border-radius: var(--radius);
+    padding: 8px 12px 8px 38px;
+    margin-bottom: 1.1rem;
+    position: relative;
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.7;
+    margin-left: -28px;
+  }
+  .transport::before { content: '🚇'; position: absolute; left: 12px; top: 8px; font-size: 14px; }
+  .transport strong { color: var(--text); font-weight: 500; }
+
+  /* Section label */
+  .label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 1rem 0 0.5rem;
+  }
+
+  /* Tip box */
+  .tip {
+    background: var(--warn-bg);
+    border: 0.5px solid var(--warn-border);
+    border-radius: var(--radius);
+    padding: 9px 13px;
+    font-size: 12px;
+    color: var(--warn-text);
+    line-height: 1.7;
+    margin-top: 1rem;
+  }
+  .tip::before { content: '💡 '; }
+
+  /* Alert */
+  .alert {
+    background: #fcebeb;
+    border: 0.5px solid #f7c1c1;
+    border-radius: var(--radius);
+    padding: 9px 13px;
+    font-size: 12px;
+    color: #a32d2d;
+    line-height: 1.7;
+  }
+  @media (prefers-color-scheme: dark) {
+    .alert { background: #501313; color: #f09595; border-color: #791f1f; }
+  }
+
+  /* Summary footer */
+  .summary {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-top: 1.5rem;
+  }
+  .summary-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+  .summary-body { font-size: 12px; color: var(--text2); line-height: 1.9; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="site-header">
+    <h1>🇰🇷 首爾五日行程</h1>
+    <p>4/23–4/27 · 精選景點 · 附 Naver Map 導航</p>
+  </div>
+
+  <div class="hotel-card">
+    <div class="hotel-icon">🏨</div>
+    <div>
+      <div class="hotel-name">明洞索拉格飯店（Sollago Myeongdong）</div>
+      <div class="hotel-detail">忠武路站 7號出口步行3分鐘 · 房號：216446 · 24小時自助入住</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="show(0)">D1 4/23 抵達</div>
+    <div class="tab" onclick="show(1)">D2 4/24 觀光日</div>
+    <div class="tab" onclick="show(2)">D3 4/25 弘大</div>
+    <div class="tab" onclick="show(3)">D4 4/26 東區</div>
+    <div class="tab" onclick="show(4)">D5 4/27 江南返台</div>
+  </div>
+
+  <!-- D1 -->
+  <div class="day-panel active" id="d0">
+    <div class="day-header">
+      <div>
+        <div class="day-badge">Day 1 · 4/23（三）</div>
+        <div class="day-title">抵達首爾</div>
+        <div class="day-subtitle">仁川機場 → 包車 → 明洞</div>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="stop">
+        <div class="stop-dot hl"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">✈️ 仁川機場落地</div><div class="stop-time">21:45</div></div>
+          <div class="stop-note">入境、取行李，出關後包車司機等候接送。</div>
+        </div>
+      </div>
+      <div class="stop">
+        <div class="stop-dot go"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🚐 包車前往飯店</div><div class="stop-time">約22:30</div></div>
+          <div class="stop-note">直達明洞索拉格飯店，車程約60分鐘。<br>房號記下：<strong>216446</strong>（自助入住需要）</div>
+          <a class="map-btn" href="https://naver.me/xGJUvZEN" target="_blank">📍 Naver Map 飯店位置</a>
+        </div>
+      </div>
+      <div class="stop">
+        <div class="stop-dot food"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🍜 宵夜隨便吃</div><div class="stop-time">23:00+</div></div>
+          <div class="stop-note">飯店1樓有 GS25 便利商店，附近忠武路有刀切麵、辣炒年糕等宵夜選擇。</div>
+        </div>
+      </div>
+    </div>
+    <div class="tip">飯店是自助入住，帶好護照。房間有洗衣機、微波爐、大冰箱！</div>
+  </div>
+
+  <!-- D2 -->
+  <div class="day-panel" id="d1">
+    <div class="day-header">
+      <div>
+        <div class="day-badge">Day 2 · 4/24（四）</div>
+        <div class="day-title">換錢 → 廣藏市場 → 景福宮 → 南山塔</div>
+        <div class="day-subtitle">行程最豐富，建議9:00出門</div>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="stop">
+        <div class="stop-dot hl"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">💰 換錢</div><div class="stop-time">09:00–10:00</div></div>
+          <div class="stop-note">推薦順序：<strong>Money Box</strong>（明洞最優匯率）→ 大信換錢所 → 大使館前換錢所。建議先換大部分，避免後面跑回來。</div>
+          <a class="map-btn" href="https://map.naver.com/p/search/%EB%AA%85%EB%8F%99%20%ED%99%98%EC%A0%84%EC%86%8C" target="_blank">📍 Naver 搜尋「명동 환전소」</a>
+        </div>
+      </div>
+
+      <div class="label">前往廣藏市場</div>
+      <div class="transport">飯店步行18分鐘，或搭計程車10分鐘（約3,000–4,000韓元）。<br>地鐵：<strong>忠武路 →（4號線）→ 東大門歷史文化公園 →（2號線）→ 乙支路4街站</strong></div>
+
+      <div class="stop">
+        <div class="stop-dot food"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🥟 廣藏市場</div><div class="stop-time">10:00–12:00</div></div>
+          <div class="stop-note">必吃：<strong>156號攤</strong>（綠豆煎餅）、<strong>214號攤</strong>（馬格利米腸）。帶現金，市場內刷卡不方便。</div>
+          <a class="map-btn" href="https://naver.me/GYmAjyWE" target="_blank">📍 Naver Map 廣藏市場</a>
+        </div>
+      </div>
+
+      <div class="label">前往景福宮</div>
+      <div class="transport"><strong>乙支路4街 →（2號線）→ 市廳站 → 換5號線 → 光化門站</strong>，步行5分鐘抵景福宮正門。</div>
+
+      <div class="stop">
+        <div class="stop-dot hl"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🏯 景福宮</div><div class="stop-time">12:30–14:30</div></div>
+          <div class="stop-note">入場費3,000韓元（週二休）。入口附近可租韓服免費入場！必看：勤政殿、香遠亭、慶會樓。</div>
+          <a class="map-btn" href="https://naver.me/FMfTe1La" target="_blank">📍 Naver Map 景福宮</a>
+        </div>
+      </div>
+
+      <div class="stop">
+        <div class="stop-dot food"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">☕ Cafe Onion 安國店</div><div class="stop-time">14:30–15:30</div></div>
+          <div class="stop-note">景福宮出來步行10分鐘。必點：芝士貝果、米麻糬麵包。建議避開下午尖峰。</div>
+          <a class="map-btn" href="https://naver.me/GFpP5b8h" target="_blank">📍 Naver Map Cafe Onion</a>
+        </div>
+      </div>
+
+      <div class="stop">
+        <div class="stop-dot"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🛍️ 明洞逛街</div><div class="stop-time">15:30–17:00</div></div>
+          <div class="stop-note">搭地鐵回明洞，逛 OLIVE YOUNG、街邊炸雞、糖餅。</div>
+          <a class="map-btn" href="https://naver.me/xBJwNOBN" target="_blank">📍 Naver Map 明洞商圈</a>
+        </div>
+      </div>
+
+      <div class="stop">
+        <div class="stop-dot hl"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🗼 南山塔（N首爾塔）</div><div class="stop-time">17:00–18:30</div></div>
+          <div class="stop-note">從明洞搭纜車上山（單程9,500韓元），黃昏最美。可掛同心鎖。回程搭05番公車下山。</div>
+          <a class="map-btn" href="https://naver.me/G0ZDAbxK" target="_blank">📍 Naver Map 南山纜車站</a>
+        </div>
+      </div>
+
+      <div class="stop">
+        <div class="stop-dot food"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🏬 樂天百貨明洞店</div><div class="stop-time">18:30–20:00</div></div>
+          <div class="stop-note">從南山下來步行可達。地下美食街晚餐、免稅店、超市採購伴手禮。</div>
+          <a class="map-btn" href="https://naver.me/G97o4V6A" target="_blank">📍 Naver Map 樂天百貨</a>
+        </div>
+      </div>
+    </div>
+    <div class="tip">這天行程最密！景福宮和南山塔如果體力不夠可以二擇一。換錢優先在 Money Box，匯率最優。</div>
+  </div>
+
+  <!-- D3 -->
+  <div class="day-panel" id="d2">
+    <div class="day-header">
+      <div>
+        <div class="day-badge">Day 3 · 4/25（五）</div>
+        <div class="day-title">弘大 → 延南洞</div>
+        <div class="day-subtitle">文青咖啡廳慢遊</div>
+      </div>
+    </div>
+    <div class="label">交通：飯店 → 弘大</div>
+    <div class="transport"><strong>忠武路 →（4號線）→ 首爾站 → 換機場鐵路AREX → 弘大入口站</strong>，約25–30分鐘。<br>或計程車約20分鐘，費用12,000–15,000韓元。</div>
+    <div class="timeline">
+      <div class="stop">
+        <div class="stop-dot food"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🍳 Egg Drop 弘大店</div><div class="stop-time">09:30–10:30</div></div>
+          <div class="stop-note">人氣蛋捲三明治，必點：牛肉蛋捲、BLT蛋捲。建議開門就到，避開排隊。</div>
+          <a class="map-btn" href="https://naver.me/xTVD05yp" target="_blank">📍 Naver Map Egg Drop</a>
+        </div>
+      </div>
+
+      <div class="stop">
+        <div class="stop-dot food"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🍞 鹽麵包（소금빵）</div><div class="stop-time">10:30–11:00</div></div>
+          <div class="stop-note">弘大附近多家名店，推薦 <strong>Pain de Papa</strong> 或 <strong>Cafe Onion 弘大店</strong>，外酥內軟奶油爆漿。</div>
+          <a class="map-btn" href="https://map.naver.com/p/search/%ED%99%8D%EB%8C%80%20%EC%86%8C%EA%B8%88%EB%B9%B5" target="_blank">📍 Naver 搜尋弘大鹽麵包</a>
+        </div>
+      </div>
+
+      <div class="stop">
+        <div class="stop-dot"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🎨 弘大街頭 / 獨立小店</div><div class="stop-time">11:00–13:00</div></div>
+          <div class="stop-note">弘大塗鴉街、獨立品牌店、唱片行。週末有街頭表演，氣氛很好。</div>
+          <a class="map-btn" href="https://naver.me/GCxu1Kq1" target="_blank">📍 Naver Map 弘大</a>
+        </div>
+      </div>
+
+      <div class="label">步行約15分鐘前往延南洞</div>
+
+      <div class="stop">
+        <div class="stop-dot hl"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🌿 延南洞散步</div><div class="stop-time">13:00–17:00</div></div>
+          <div class="stop-note">首爾最文青小巷！<strong>京義線森林公園</strong>散步、隱藏咖啡廳探索、手作小店。邊走邊拍最愜意。</div>
+          <a class="map-btn" href="https://naver.me/FJAd3kNF" target="_blank">📍 Naver Map 延南洞</a>
+        </div>
+      </div>
+    </div>
+    <div class="tip">延南洞很適合邊逛邊找吃的！午餐就地解決，這區韓式、西式選擇都多。</div>
+  </div>
+
+  <!-- D4 -->
+  <div class="day-panel" id="d3">
+    <div class="day-header">
+      <div>
+        <div class="day-badge">Day 4 · 4/26（六）</div>
+        <div class="day-title">馬場洞韓牛 → 聖水洞 → 東大門</div>
+        <div class="day-subtitle">美食 + 潮流的一天</div>
+      </div>
+    </div>
+    <div class="label">交通：飯店 → 馬場洞</div>
+    <div class="transport"><strong>忠武路 →（4號線）→ 東大門歷史文化公園 →（5號線）→ 馬場站</strong>，約15分鐘。</div>
+    <div class="timeline">
+      <div class="stop">
+        <div class="stop-dot food"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🥩 馬場洞韓牛市場</div><div class="stop-time">10:00–13:00</div></div>
+          <div class="stop-note">首爾最大肉市場！在1樓市場選肉，拿到2樓烤肉店加工（加工費約3,000–5,000韓元/人）。必吃：<strong>嫩肩里肌（꽃등심）</strong>。帶現金！</div>
+          <a class="map-btn" href="https://naver.me/xLhGpbbs" target="_blank">📍 Naver Map 馬場洞肉類市場</a>
+        </div>
+      </div>
+
+      <div class="label">前往聖水洞</div>
+      <div class="transport"><strong>馬場站 →（5號線）→ 王十里站 → 換2號線 → 聖水站</strong>，約10分鐘。</div>
+
+      <div class="stop">
+        <div class="stop-dot hl"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🏭 聖水洞（성수동）</div><div class="stop-time">13:30–16:30</div></div>
+          <div class="stop-note">首爾最潮工業風街區！必去：<strong>大林倉庫（대림창고）</strong>、各種快閃品牌店、塗鴉牆。週末人多，提早到。</div>
+          <a class="map-btn" href="https://naver.me/F1C1sVip" target="_blank">📍 Naver Map 聖水洞</a>
+        </div>
+      </div>
+
+      <div class="label">前往東大門</div>
+      <div class="transport"><strong>聖水站 →（2號線）→ 東大門歷史文化公園站</strong>，約8分鐘。</div>
+
+      <div class="stop">
+        <div class="stop-dot"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">🌃 東大門夜逛 + DDP</div><div class="stop-time">17:00–21:00</div></div>
+          <div class="stop-note">東大門設計廣場（DDP）夜景必拍！Doota Mall、周邊批發市場天黑後更熱鬧。</div>
+          <a class="map-btn" href="https://naver.me/GpLMzWx3" target="_blank">📍 Naver Map 東大門DDP</a>
+        </div>
+      </div>
+    </div>
+    <div class="tip">馬場洞一定要帶現金！聖水洞建議留3小時，很多咖啡廳藏在巷子裡需要時間找。</div>
+  </div>
+
+  <!-- D5 -->
+  <div class="day-panel" id="d4">
+    <div class="day-header">
+      <div>
+        <div class="day-badge">Day 5 · 4/27（日）</div>
+        <div class="day-title">江南 → COEX → 狎鷗亭 → 返台</div>
+        <div class="day-subtitle">⚠️ 19:00 飯店集合，務必控制時間！</div>
+      </div>
+    </div>
+    <div class="alert">⚠️ 最後一天！建議Check-out後請飯店代保管行李，18:00前一定要從狎鷗亭出發回飯店。</div>
+    <br>
+    <div class="label">交通：飯店 → COEX</div>
+    <div class="transport"><strong>忠武路 →（4號線）→ 東大門歷史文化公園 → 換2號線 → 三成站</strong>，約30分鐘。</div>
+    <div class="timeline">
+      <div class="stop">
+        <div class="stop-dot hl"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">📚 COEX Mall · 星空圖書館</div><div class="stop-time">10:00–13:00</div></div>
+          <div class="stop-note"><strong>別마당도서관（星空圖書館）</strong>免費參觀，網美必打卡！建議平日早上去，週末人超多。同場逛COEX購物、吃午餐。</div>
+          <a class="map-btn" href="https://naver.me/5JsXLWex" target="_blank">📍 Naver Map 星空圖書館</a>
+        </div>
+      </div>
+
+      <div class="label">前往狎鷗亭</div>
+      <div class="transport"><strong>三成站 →（2號線）→ 狎鷗亭站</strong>，約8分鐘。</div>
+
+      <div class="stop">
+        <div class="stop-dot hl"></div>
+        <div class="stop-card">
+          <div class="stop-top"><div class="stop-name">💄 狎鷗亭羅德奧街</div><div class="stop-time">13:00–17:00</div></div>
+          <div class="stop-note">韓星出沒地帶！精品店、獨立咖啡廳聚集。必逛：<strong>清潭洞街</strong>、<strong>島山公園</strong>周邊咖啡廳。最後採購伴手禮。</div>
+          <a class="map-btn" href="https://naver.me/GDhkpDJi" target="_blank">📍 Naver Map 狎鷗亭羅德奧</a>
+        </div>
+      </div>
+
+      <div class="stop">
+        <div class="stop-dot hl"></div>
+        <div class="stop-card">
+          <div class="stop-top">
+            <div class="stop-name">🚐 飯店集合搭車</div>
+            <div class="stop-time" style="color:#a32d2d;font-weight:500">⚠️ 19:00 務必到</div>
+          </div>
+          <div class="stop-note">從狎鷗亭回飯店：地鐵約35分鐘，計程車約25分鐘（15,000–20,000韓元）。<strong>建議18:00出發，留時間整理行李。</strong></div>
+        </div>
+      </div>
+    </div>
+    <div class="tip">狎鷗亭消費較高，記得保留足夠韓元。OLIVE YOUNG D2就買完了不用再跑！</div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-title">📌 重要提醒</div>
+    <div class="summary-body">
+      🪙 建議準備現金 20–25萬韓元（廣藏、馬場洞需現金）<br>
+      🚇 入境後購買 T-money 或 WOWPASS 交通卡<br>
+      📱 必裝 App：<strong>Naver Map</strong>（導航）、<strong>Kakao T</strong>（叫計程車）<br>
+      🧴 OLIVE YOUNG：建議 D2 在明洞一次採購完畢
+    </div>
+  </div>
+
+</div>
+<script>
+function show(i) {
+  document.querySelectorAll('.day-panel').forEach((p, idx) => p.classList.toggle('active', idx === i));
+  document.querySelectorAll('.tab').forEach((t, idx) => t.classList.toggle('active', idx === i));
+}
+</script>
+</body>
+</html>
