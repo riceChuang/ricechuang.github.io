@@ -7,147 +7,82 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #ffffff;
-    --bg2: #f5f5f0;
-    --bg3: #ededea;
-    --text: #1a1a18;
-    --text2: #6b6b66;
-    --text3: #9a9a94;
-    --border: rgba(0,0,0,0.1);
-    --border2: rgba(0,0,0,0.18);
-    --info-bg: #e6f1fb;
-    --info-text: #185fa5;
-    --info-border: #b5d4f4;
-    --warn-bg: #faeeda;
-    --warn-text: #854f0b;
-    --warn-border: #fac775;
-    --success-bg: #eaf3de;
-    --success-text: #3b6d11;
-    --success-border: #c0dd97;
-    --radius: 8px;
-    --radius-lg: 12px;
+    --bg: #ffffff; --bg2: #f5f5f0; --bg3: #ededea;
+    --text: #1a1a18; --text2: #6b6b66; --text3: #9a9a94;
+    --border: rgba(0,0,0,0.1); --border2: rgba(0,0,0,0.18);
+    --info-bg: #e6f1fb; --info-text: #185fa5; --info-border: #b5d4f4;
+    --warn-bg: #faeeda; --warn-text: #854f0b; --warn-border: #fac775;
+    --success-bg: #eaf3de; --success-text: #3b6d11; --success-border: #c0dd97;
+    --eat: #e84e1b; --eat-bg: #fef0ec; --eat-border: #f9c4b3;
+    --coffee: #7c5c3c; --coffee-bg: #f8f0e8; --coffee-border: #dbc8ad;
+    --shop: #2563eb; --shop-bg: #eff5ff; --shop-border: #b4d0fa;
+    --radius: 8px; --radius-lg: 12px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1c1c1a;
-      --bg2: #252523;
-      --bg3: #2e2e2b;
-      --text: #e8e6de;
-      --text2: #9a9a94;
-      --text3: #6b6b66;
-      --border: rgba(255,255,255,0.1);
-      --border2: rgba(255,255,255,0.18);
-      --info-bg: #042c53;
-      --info-text: #85b7eb;
-      --info-border: #0c447c;
-      --warn-bg: #412402;
-      --warn-text: #fac775;
-      --warn-border: #633806;
-      --success-bg: #173404;
-      --success-text: #c0dd97;
-      --success-border: #27500a;
+      --bg: #1c1c1a; --bg2: #252523; --bg3: #2e2e2b;
+      --text: #e8e6de; --text2: #9a9a94; --text3: #6b6b66;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.18);
+      --info-bg: #042c53; --info-text: #85b7eb; --info-border: #0c447c;
+      --warn-bg: #412402; --warn-text: #fac775; --warn-border: #633806;
+      --success-bg: #173404; --success-text: #c0dd97; --success-border: #27500a;
+      --eat: #f4845f; --eat-bg: #3d1a0a; --eat-border: #6b2a10;
+      --coffee: #c9a87c; --coffee-bg: #2e2418; --coffee-border: #5a4530;
+      --shop: #6ea8fe; --shop-bg: #0d1f3c; --shop-border: #1a3a6b;
     }
   }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-    background: var(--bg3);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 1.5rem 1rem 3rem;
+    background: var(--bg3); color: var(--text);
+    min-height: 100vh; padding: 1.5rem 1rem 3rem;
   }
   .wrapper { max-width: 680px; margin: 0 auto; }
-
-  /* Header */
-  .site-header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-  }
+  .site-header { text-align: center; margin-bottom: 1.5rem; }
   .site-header h1 { font-size: 22px; font-weight: 500; }
   .site-header p { font-size: 13px; color: var(--text2); margin-top: 5px; }
-
-  /* Hotel card */
   .hotel-card {
-    background: var(--bg);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 12px 16px;
-    margin-bottom: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg);
+    padding: 12px 16px; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 12px;
   }
   .hotel-icon { font-size: 24px; flex-shrink: 0; }
   .hotel-name { font-size: 14px; font-weight: 500; }
   .hotel-detail { font-size: 12px; color: var(--text2); margin-top: 2px; }
-
-  /* Tabs */
   .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1.25rem; }
   .tab {
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 0.5px solid var(--border2);
-    font-size: 13px;
-    cursor: pointer;
-    color: var(--text2);
-    background: var(--bg);
-    transition: all 0.15s;
-    user-select: none;
+    padding: 6px 14px; border-radius: 20px; border: 0.5px solid var(--border2);
+    font-size: 13px; cursor: pointer; color: var(--text2); background: var(--bg);
+    transition: all 0.15s; user-select: none;
   }
   .tab:hover { border-color: var(--info-border); color: var(--info-text); }
   .tab.active { background: var(--info-bg); color: var(--info-text); border-color: transparent; font-weight: 500; }
-
-  /* Day panel */
   .day-panel { display: none; }
   .day-panel.active { display: block; }
-
   .day-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 0.5px solid var(--border);
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid var(--border);
   }
   .day-badge {
-    background: var(--info-bg);
-    color: var(--info-text);
-    font-size: 11px;
-    font-weight: 500;
-    padding: 3px 10px;
-    border-radius: 12px;
-    white-space: nowrap;
+    background: var(--info-bg); color: var(--info-text);
+    font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 12px; white-space: nowrap;
   }
   .day-title { font-size: 16px; font-weight: 500; margin-bottom: 2px; }
   .day-subtitle { font-size: 12px; color: var(--text2); }
-
-  /* Timeline */
   .timeline { position: relative; padding-left: 28px; }
   .timeline::before {
-    content: '';
-    position: absolute;
-    left: 9px; top: 10px; bottom: 10px;
-    width: 1px;
-    background: var(--border);
+    content: ''; position: absolute; left: 9px; top: 10px; bottom: 10px;
+    width: 1px; background: var(--border);
   }
   .stop { position: relative; margin-bottom: 1.1rem; }
   .stop-dot {
-    position: absolute;
-    left: -23px; top: 6px;
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    border: 1.5px solid var(--border2);
-    background: var(--bg);
+    position: absolute; left: -23px; top: 6px; width: 10px; height: 10px;
+    border-radius: 50%; border: 1.5px solid var(--border2); background: var(--bg);
   }
   .stop-dot.hl { background: var(--info-bg); border-color: var(--info-border); }
   .stop-dot.food { background: var(--warn-bg); border-color: var(--warn-border); }
   .stop-dot.go { background: var(--success-bg); border-color: var(--success-border); }
-
   .stop-card {
-    background: var(--bg);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius);
-    padding: 10px 13px;
-    transition: border-color 0.15s;
+    background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius);
+    padding: 10px 13px; transition: border-color 0.15s;
   }
   .stop-card:hover { border-color: var(--border2); }
   .stop-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
@@ -155,85 +90,88 @@
   .stop-time { font-size: 11px; color: var(--text3); white-space: nowrap; padding-top: 2px; flex-shrink: 0; }
   .stop-note { font-size: 12px; color: var(--text2); margin-top: 5px; line-height: 1.6; }
   .stop-note strong { color: var(--text); font-weight: 500; }
-
   .map-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
-    color: var(--info-text);
-    text-decoration: none;
-    margin-top: 7px;
-    padding: 3px 9px;
-    border: 0.5px solid var(--info-border);
-    border-radius: 10px;
-    background: var(--info-bg);
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; color: var(--info-text); text-decoration: none;
+    margin-top: 7px; padding: 3px 9px;
+    border: 0.5px solid var(--info-border); border-radius: 10px; background: var(--info-bg);
     transition: opacity 0.15s;
   }
   .map-btn:hover { opacity: 0.75; }
-
-  /* Transport block */
   .transport {
-    background: var(--bg2);
-    border-radius: var(--radius);
-    padding: 8px 12px 8px 38px;
-    margin-bottom: 1.1rem;
-    position: relative;
-    font-size: 12px;
-    color: var(--text2);
-    line-height: 1.7;
-    margin-left: -28px;
+    background: var(--bg2); border-radius: var(--radius);
+    padding: 8px 12px 8px 38px; margin-bottom: 1.1rem;
+    position: relative; font-size: 12px; color: var(--text2); line-height: 1.7; margin-left: -28px;
   }
   .transport::before { content: '🚇'; position: absolute; left: 12px; top: 8px; font-size: 14px; }
   .transport strong { color: var(--text); font-weight: 500; }
-
-  /* Section label */
   .label {
-    font-size: 10px;
-    font-weight: 500;
-    color: var(--text3);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin: 1rem 0 0.5rem;
+    font-size: 10px; font-weight: 500; color: var(--text3);
+    letter-spacing: 0.06em; text-transform: uppercase; margin: 1rem 0 0.5rem;
   }
-
-  /* Tip box */
   .tip {
-    background: var(--warn-bg);
-    border: 0.5px solid var(--warn-border);
-    border-radius: var(--radius);
-    padding: 9px 13px;
-    font-size: 12px;
-    color: var(--warn-text);
-    line-height: 1.7;
-    margin-top: 1rem;
+    background: var(--warn-bg); border: 0.5px solid var(--warn-border); border-radius: var(--radius);
+    padding: 9px 13px; font-size: 12px; color: var(--warn-text); line-height: 1.7; margin-top: 1rem;
   }
   .tip::before { content: '💡 '; }
-
-  /* Alert */
   .alert {
-    background: #fcebeb;
-    border: 0.5px solid #f7c1c1;
-    border-radius: var(--radius);
-    padding: 9px 13px;
-    font-size: 12px;
-    color: #a32d2d;
-    line-height: 1.7;
+    background: #fcebeb; border: 0.5px solid #f7c1c1; border-radius: var(--radius);
+    padding: 9px 13px; font-size: 12px; color: #a32d2d; line-height: 1.7;
   }
   @media (prefers-color-scheme: dark) {
     .alert { background: #501313; color: #f09595; border-color: #791f1f; }
   }
-
-  /* Summary footer */
   .summary {
-    background: var(--bg);
-    border: 0.5px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 1rem 1.25rem;
-    margin-top: 1.5rem;
+    background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem; margin-top: 1.5rem;
   }
   .summary-title { font-size: 13px; font-weight: 500; margin-bottom: 8px; }
   .summary-body { font-size: 12px; color: var(--text2); line-height: 1.9; }
+
+  /* Pocket list */
+  .pocket { margin-top: 1.25rem; }
+  .pocket-header {
+    font-size: 12px; font-weight: 500; color: var(--text2);
+    padding: 8px 0; border-top: 0.5px solid var(--border);
+    display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none;
+  }
+  .pocket-header .arrow { transition: transform 0.2s; font-size: 10px; }
+  .pocket-header.open .arrow { transform: rotate(90deg); }
+  .pocket-count {
+    font-size: 10px; background: var(--bg2); color: var(--text3);
+    padding: 1px 7px; border-radius: 8px; margin-left: auto;
+  }
+  .pocket-body { display: none; padding-top: 6px; }
+  .pocket-header.open + .pocket-body { display: block; }
+  .pocket-area {
+    font-size: 10px; font-weight: 500; color: var(--text3); letter-spacing: 0.04em;
+    margin: 10px 0 5px; padding-bottom: 3px;
+  }
+  .pocket-area:first-child { margin-top: 0; }
+  .pk {
+    background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius);
+    padding: 8px 11px; margin-bottom: 6px;
+    display: flex; align-items: center; gap: 9px; transition: border-color 0.15s;
+  }
+  .pk:hover { border-color: var(--border2); }
+  .pk-icon { font-size: 15px; flex-shrink: 0; }
+  .pk-body { flex: 1; min-width: 0; }
+  .pk-row { display: flex; align-items: center; gap: 6px; }
+  .pk-name { font-size: 13px; font-weight: 500; }
+  .pk-tag {
+    font-size: 9px; font-weight: 600; padding: 1px 6px; border-radius: 6px;
+    white-space: nowrap; flex-shrink: 0; letter-spacing: 0.02em;
+  }
+  .pk-tag.eat { background: var(--eat-bg); color: var(--eat); }
+  .pk-tag.coffee { background: var(--coffee-bg); color: var(--coffee); }
+  .pk-tag.shop { background: var(--shop-bg); color: var(--shop); }
+  .pk-addr { font-size: 10px; color: var(--text3); margin-top: 2px; }
+  .pk-link {
+    font-size: 10px; color: #1ec800; text-decoration: none; flex-shrink: 0;
+    padding: 2px 7px; border: 0.5px solid #1ec80044; border-radius: 6px;
+    background: #1ec80008; transition: opacity 0.15s;
+  }
+  .pk-link:hover { opacity: 0.7; }
 </style>
 </head>
 <body>
@@ -241,7 +179,7 @@
 
   <div class="site-header">
     <h1>🇰🇷 首爾五日行程</h1>
-    <p>4/23–4/27 · 精選景點 · 附 Naver Map 導航</p>
+    <p>4/23–4/27 · 精選景點 · 附 Naver Map 導航 · 口袋名單</p>
   </div>
 
   <div class="hotel-card">
@@ -258,6 +196,7 @@
     <div class="tab" onclick="show(2)">D3 4/25 弘大</div>
     <div class="tab" onclick="show(3)">D4 4/26 東區</div>
     <div class="tab" onclick="show(4)">D5 4/27 江南返台</div>
+    <div class="tab" onclick="show(5)">📍 其他口袋名單</div>
   </div>
 
   <!-- D1 -->
@@ -314,10 +253,8 @@
           <a class="map-btn" href="https://map.naver.com/p/search/%EB%AA%85%EB%8F%99%20%ED%99%98%EC%A0%84%EC%86%8C" target="_blank">📍 Naver 搜尋「명동 환전소」</a>
         </div>
       </div>
-
       <div class="label">前往廣藏市場</div>
       <div class="transport">飯店步行18分鐘，或搭計程車10分鐘（約3,000–4,000韓元）。<br>地鐵：<strong>忠武路 →（4號線）→ 東大門歷史文化公園 →（2號線）→ 乙支路4街站</strong></div>
-
       <div class="stop">
         <div class="stop-dot food"></div>
         <div class="stop-card">
@@ -326,10 +263,8 @@
           <a class="map-btn" href="https://naver.me/GYmAjyWE" target="_blank">📍 Naver Map 廣藏市場</a>
         </div>
       </div>
-
       <div class="label">前往景福宮</div>
       <div class="transport"><strong>乙支路4街 →（2號線）→ 市廳站 → 換5號線 → 光化門站</strong>，步行5分鐘抵景福宮正門。</div>
-
       <div class="stop">
         <div class="stop-dot hl"></div>
         <div class="stop-card">
@@ -338,7 +273,6 @@
           <a class="map-btn" href="https://naver.me/FMfTe1La" target="_blank">📍 Naver Map 景福宮</a>
         </div>
       </div>
-
       <div class="stop">
         <div class="stop-dot food"></div>
         <div class="stop-card">
@@ -347,7 +281,6 @@
           <a class="map-btn" href="https://naver.me/GFpP5b8h" target="_blank">📍 Naver Map Cafe Onion</a>
         </div>
       </div>
-
       <div class="stop">
         <div class="stop-dot"></div>
         <div class="stop-card">
@@ -356,7 +289,6 @@
           <a class="map-btn" href="https://naver.me/xBJwNOBN" target="_blank">📍 Naver Map 明洞商圈</a>
         </div>
       </div>
-
       <div class="stop">
         <div class="stop-dot hl"></div>
         <div class="stop-card">
@@ -365,7 +297,6 @@
           <a class="map-btn" href="https://naver.me/G0ZDAbxK" target="_blank">📍 Naver Map 南山纜車站</a>
         </div>
       </div>
-
       <div class="stop">
         <div class="stop-dot food"></div>
         <div class="stop-card">
@@ -376,6 +307,36 @@
       </div>
     </div>
     <div class="tip">這天行程最密！景福宮和南山塔如果體力不夠可以二擇一。換錢優先在 Money Box，匯率最優。</div>
+
+    <!-- D2 pocket list -->
+    <div class="pocket">
+      <div class="pocket-header" onclick="this.classList.toggle('open')">
+        <span class="arrow">▶</span> 📍 附近口袋名單 <span class="pocket-count">16</span>
+      </div>
+      <div class="pocket-body">
+        <div class="pocket-area">🏙 明洞 · 忠武路</div>
+        <div class="pk"><div class="pk-icon">🍜</div><div class="pk-body"><div class="pk-row"><span class="pk-name">백옥 명동</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">명동8길 8-23</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1604370045" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🍜</div><div class="pk-body"><div class="pk-row"><span class="pk-name">미성옥</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">명동길 25-11</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/11727415" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🍲</div><div class="pk-body"><div class="pk-row"><span class="pk-name">목멱산방</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">퇴계로20길 71（南山山腳）</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/13573290" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">📸</div><div class="pk-body"><div class="pk-row"><span class="pk-name">코닥 명동센터샵</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">명동8길 13</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1933450376" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">⛺</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스노우피크 명동점</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">명동6길 14</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/2074023681" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">⛺</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스노우피크 롯데본점</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">남대문로 81</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1191820022" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">⛺</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스노우피크 신세계百貨</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">퇴계로 77</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1026334365" target="_blank">🗺</a></div>
+
+        <div class="pocket-area">🏛 乙支路 · 鍾路 · 光化門</div>
+        <div class="pk"><div class="pk-icon">🐔</div><div class="pk-body"><div class="pk-row"><span class="pk-name">효계 을지로점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">을지로12길 17</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1970041528" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🥩</div><div class="pk-body"><div class="pk-row"><span class="pk-name">산청숯불가든 을지로</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">을지로 114-6</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1850187827" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🥩</div><div class="pk-body"><div class="pk-row"><span class="pk-name">산청숯불가든 을지로 2호점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">을지로14길 12</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1069950349" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🍗</div><div class="pk-body"><div class="pk-row"><span class="pk-name">종로계림닭도리탕원조</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">돈화문로4길 39</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/33068253" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">☕</div><div class="pk-body"><div class="pk-row"><span class="pk-name">조앤도슨 광화문점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">종로 33</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/2077817507" target="_blank">🗺</a></div>
+
+        <div class="pocket-area">🏯 景福宮 · 北村 · 西村 · 益善洞</div>
+        <div class="pk"><div class="pk-icon">🍞</div><div class="pk-body"><div class="pk-row"><span class="pk-name">아티스트베이커리 안국</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">율곡로 45</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1741938125" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🍞</div><div class="pk-body"><div class="pk-row"><span class="pk-name">술화덕빵</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">자하문로1나길 23（西村）</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/36639715" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🥩</div><div class="pk-body"><div class="pk-row"><span class="pk-name">뼈탄집 서촌본점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">자하문로1길 13（西村）</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1488058730" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🍝</div><div class="pk-body"><div class="pk-row"><span class="pk-name">도시바 서순라길점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">서순라길 137（益善洞）</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1348518111" target="_blank">🗺</a></div>
+      </div>
+    </div>
   </div>
 
   <!-- D3 -->
@@ -398,7 +359,6 @@
           <a class="map-btn" href="https://naver.me/xTVD05yp" target="_blank">📍 Naver Map Egg Drop</a>
         </div>
       </div>
-
       <div class="stop">
         <div class="stop-dot food"></div>
         <div class="stop-card">
@@ -407,7 +367,6 @@
           <a class="map-btn" href="https://map.naver.com/p/search/%ED%99%8D%EB%8C%80%20%EC%86%8C%EA%B8%88%EB%B9%B5" target="_blank">📍 Naver 搜尋弘大鹽麵包</a>
         </div>
       </div>
-
       <div class="stop">
         <div class="stop-dot"></div>
         <div class="stop-card">
@@ -416,9 +375,7 @@
           <a class="map-btn" href="https://naver.me/GCxu1Kq1" target="_blank">📍 Naver Map 弘大</a>
         </div>
       </div>
-
       <div class="label">步行約15分鐘前往延南洞</div>
-
       <div class="stop">
         <div class="stop-dot hl"></div>
         <div class="stop-card">
@@ -429,6 +386,22 @@
       </div>
     </div>
     <div class="tip">延南洞很適合邊逛邊找吃的！午餐就地解決，這區韓式、西式選擇都多。</div>
+
+    <!-- D3 pocket list -->
+    <div class="pocket">
+      <div class="pocket-header" onclick="this.classList.toggle('open')">
+        <span class="arrow">▶</span> 📍 附近口袋名單 <span class="pocket-count">6</span>
+      </div>
+      <div class="pocket-body">
+        <div class="pocket-area">🎸 弘大 · 延南洞 · 新村</div>
+        <div class="pk"><div class="pk-icon">🍳</div><div class="pk-body"><div class="pk-row"><span class="pk-name">평화연남</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">동교로 254-1</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1874989869" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🐟</div><div class="pk-body"><div class="pk-row"><span class="pk-name">풍천장어 연남점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">동교로27길 39</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/11824418" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🐟</div><div class="pk-body"><div class="pk-row"><span class="pk-name">풍천장어 연남2호점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">월드컵북로6길 57</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1312103722" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🍝</div><div class="pk-body"><div class="pk-row"><span class="pk-name">오뗄드꾸뜨</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">동교로46길 7</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1577648959" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🍖</div><div class="pk-body"><div class="pk-row"><span class="pk-name">소신이쏘 신촌본점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">연세로5가길 19（新村）</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/36324567" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">☕</div><div class="pk-body"><div class="pk-row"><span class="pk-name">파롤앤랑그</span><span class="pk-tag coffee">COFFEE</span></div><div class="pk-addr">성미산로29안길 8</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1830575633" target="_blank">🗺</a></div>
+      </div>
+    </div>
   </div>
 
   <!-- D4 -->
@@ -451,10 +424,8 @@
           <a class="map-btn" href="https://naver.me/xLhGpbbs" target="_blank">📍 Naver Map 馬場洞肉類市場</a>
         </div>
       </div>
-
       <div class="label">前往聖水洞</div>
       <div class="transport"><strong>馬場站 →（5號線）→ 王十里站 → 換2號線 → 聖水站</strong>，約10分鐘。</div>
-
       <div class="stop">
         <div class="stop-dot hl"></div>
         <div class="stop-card">
@@ -463,10 +434,8 @@
           <a class="map-btn" href="https://naver.me/F1C1sVip" target="_blank">📍 Naver Map 聖水洞</a>
         </div>
       </div>
-
       <div class="label">前往東大門</div>
       <div class="transport"><strong>聖水站 →（2號線）→ 東大門歷史文化公園站</strong>，約8分鐘。</div>
-
       <div class="stop">
         <div class="stop-dot"></div>
         <div class="stop-card">
@@ -477,6 +446,33 @@
       </div>
     </div>
     <div class="tip">馬場洞一定要帶現金！聖水洞建議留3小時，很多咖啡廳藏在巷子裡需要時間找。</div>
+
+    <!-- D4 pocket list -->
+    <div class="pocket">
+      <div class="pocket-header" onclick="this.classList.toggle('open')">
+        <span class="arrow">▶</span> 📍 附近口袋名單 <span class="pocket-count">15</span>
+      </div>
+      <div class="pocket-body">
+        <div class="pocket-area">🏭 聖水洞 · 首爾林</div>
+        <div class="pk"><div class="pk-icon">🐚</div><div class="pk-body"><div class="pk-row"><span class="pk-name">조개도</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">성덕정17길 8-1</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1475051360" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🐷</div><div class="pk-body"><div class="pk-row"><span class="pk-name">하남돼지집 성수역점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">아차산로 85</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/35316961" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🍲</div><div class="pk-body"><div class="pk-row"><span class="pk-name">소문난성수감자탕</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">연무장길 45</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/11721256" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🍖</div><div class="pk-body"><div class="pk-row"><span class="pk-name">꿉당 성수점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">성수이로20길 10</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1739440199" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🍞</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스탠다드브레드 성수</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">성수이로18길 37</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1720159258" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🧂</div><div class="pk-body"><div class="pk-row"><span class="pk-name">자연도소금빵in 성수</span><span class="pk-tag coffee">COFFEE</span></div><div class="pk-addr">연무장길 56-1</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1022429915" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">☕</div><div class="pk-body"><div class="pk-row"><span class="pk-name">베통 성수</span><span class="pk-tag coffee">COFFEE</span></div><div class="pk-addr">연무장7가길 8</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/365858525" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">😎</div><div class="pk-body"><div class="pk-row"><span class="pk-name">젠틀몬스터 성수점</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">성수이로7길 26</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/2038481891" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">👕</div><div class="pk-body"><div class="pk-row"><span class="pk-name">세터하우스 서울숲</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">상원1길 5</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1498214224" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">👕</div><div class="pk-body"><div class="pk-row"><span class="pk-name">세터하우스 성수</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">연무장17길 6</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1366678933" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">👗</div><div class="pk-body"><div class="pk-row"><span class="pk-name">이미스 플래그십 성수</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">연무장길 29-17</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1466575776" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🎨</div><div class="pk-body"><div class="pk-row"><span class="pk-name">아더에러 성수 스페이스</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">성수이로 82</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1965484876" target="_blank">🗺</a></div>
+
+        <div class="pocket-area">🌃 東大門 · 往十里</div>
+        <div class="pk"><div class="pk-icon">🌶️</div><div class="pk-body"><div class="pk-row"><span class="pk-name">악어떡볶이</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">마조로 33</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/36210603" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">⛺</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스노우피크 현대아울렛 동대문</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">장충단로13길 20</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1791408766" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">⛺</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스노우피크 던던동대문점</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">을지로 264</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1525617180" target="_blank">🗺</a></div>
+      </div>
+    </div>
   </div>
 
   <!-- D5 -->
@@ -501,10 +497,8 @@
           <a class="map-btn" href="https://naver.me/5JsXLWex" target="_blank">📍 Naver Map 星空圖書館</a>
         </div>
       </div>
-
       <div class="label">前往狎鷗亭</div>
       <div class="transport"><strong>三成站 →（2號線）→ 狎鷗亭站</strong>，約8分鐘。</div>
-
       <div class="stop">
         <div class="stop-dot hl"></div>
         <div class="stop-card">
@@ -513,7 +507,6 @@
           <a class="map-btn" href="https://naver.me/GDhkpDJi" target="_blank">📍 Naver Map 狎鷗亭羅德奧</a>
         </div>
       </div>
-
       <div class="stop">
         <div class="stop-dot hl"></div>
         <div class="stop-card">
@@ -526,9 +519,53 @@
       </div>
     </div>
     <div class="tip">狎鷗亭消費較高，記得保留足夠韓元。OLIVE YOUNG D2就買完了不用再跑！</div>
+
+    <!-- D5 pocket list -->
+    <div class="pocket">
+      <div class="pocket-header" onclick="this.classList.toggle('open')">
+        <span class="arrow">▶</span> 📍 附近口袋名單 <span class="pocket-count">7</span>
+      </div>
+      <div class="pocket-body">
+        <div class="pocket-area">💎 狎鷗亭 · 清潭 · 道山</div>
+        <div class="pk"><div class="pk-icon">🍜</div><div class="pk-body"><div class="pk-row"><span class="pk-name">면서울</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">선릉로 805</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1881172296" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🍚</div><div class="pk-body"><div class="pk-row"><span class="pk-name">솔솥 청담점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">도산대로53길 16</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1877621159" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🥯</div><div class="pk-body"><div class="pk-row"><span class="pk-name">런던베이글뮤지엄 도산</span><span class="pk-tag coffee">COFFEE</span></div><div class="pk-addr">언주로168길 33</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1967647240" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">🛹</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스투시</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">압구정로46길 78</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/2081206882" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">👔</div><div class="pk-body"><div class="pk-row"><span class="pk-name">준지 도산 플래그십</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">언주로164길 23</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1052548695" target="_blank">🗺</a></div>
+        <div class="pk"><div class="pk-icon">👟</div><div class="pk-body"><div class="pk-row"><span class="pk-name">웍스아웃 압구정점</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">선릉로157길 20-4</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/33647101" target="_blank">🗺</a></div>
+
+        <div class="pocket-area">🏙 江南站</div>
+        <div class="pk"><div class="pk-icon">🥩</div><div class="pk-body"><div class="pk-row"><span class="pk-name">뼈탄집 강남역점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">강남대로78길 16</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1545837622" target="_blank">🗺</a></div>
+      </div>
+    </div>
   </div>
 
-  <a href="./spots.html" style="display:block;text-align:center;margin:1.25rem 0;padding:12px 20px;background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);text-decoration:none;color:var(--text);font-size:14px;font-weight:500;transition:border-color 0.15s;">📍 口袋名單 — 52 個收藏地點（依地區分類）</a>
+  <!-- Other spots -->
+  <div class="day-panel" id="d5">
+    <div class="day-header">
+      <div>
+        <div class="day-badge">📍 口袋名單</div>
+        <div class="day-title">其他收藏地點</div>
+        <div class="day-subtitle">不在五日行程路線上，但值得排進去的好店</div>
+      </div>
+    </div>
+
+    <div class="pocket-area" style="font-size:11px;font-weight:500;color:var(--text2);margin:0 0 8px;">🗼 龍山 · 漢南 · 梨泰院</div>
+    <div class="pk"><div class="pk-icon">🥩</div><div class="pk-body"><div class="pk-row"><span class="pk-name">뼈탄집 용산직영점</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">백범로99길 62</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1231861830" target="_blank">🗺</a></div>
+    <div class="pk"><div class="pk-icon">🍜</div><div class="pk-body"><div class="pk-row"><span class="pk-name">난포 한남</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">이태원로49길 18</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1351826018" target="_blank">🗺</a></div>
+    <div class="pk"><div class="pk-icon">🍞</div><div class="pk-body"><div class="pk-row"><span class="pk-name">바게티</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">한강대로40길 55</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/2036788171" target="_blank">🗺</a></div>
+    <div class="pk"><div class="pk-icon">🍢</div><div class="pk-body"><div class="pk-row"><span class="pk-name">용산오뎅</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">한강대로15길 28</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1646306243" target="_blank">🗺</a></div>
+
+    <div class="pocket-area" style="font-size:11px;font-weight:500;color:var(--text2);margin:12px 0 8px;">🚇 孔德 · 麻浦</div>
+    <div class="pk"><div class="pk-icon">🦶</div><div class="pk-body"><div class="pk-row"><span class="pk-name">마포왕족발</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">공덕동 256-43</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/19886003" target="_blank">🗺</a></div>
+    <div class="pk"><div class="pk-icon">🥓</div><div class="pk-body"><div class="pk-row"><span class="pk-name">영광보쌈</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">만리재로1길 14</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/13159261" target="_blank">🗺</a></div>
+
+    <div class="pocket-area" style="font-size:11px;font-weight:500;color:var(--text2);margin:12px 0 8px;">🚉 首爾站 · 永登浦</div>
+    <div class="pk"><div class="pk-icon">⛺</div><div class="pk-body"><div class="pk-row"><span class="pk-name">스노우피크 롯데아울렛 서울역</span><span class="pk-tag shop">SHOP</span></div><div class="pk-addr">한강대로 405</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/1376577452" target="_blank">🗺</a></div>
+    <div class="pk"><div class="pk-icon">🍲</div><div class="pk-body"><div class="pk-row"><span class="pk-name">아우네장터순대국</span><span class="pk-tag eat">EAT</span></div><div class="pk-addr">영중로14길 19-1</div></div><a class="pk-link" href="https://map.naver.com/p/entry/place/32316056" target="_blank">🗺</a></div>
+
+    <div class="tip" style="margin-top:1rem;">這些點可以當備案，如果某天行程提早結束、或想加碼，可以就近繞過去！</div>
+  </div>
 
   <div class="summary">
     <div class="summary-title">📌 重要提醒</div>
@@ -536,7 +573,8 @@
       🪙 建議準備現金 20–25萬韓元（廣藏、馬場洞需現金）<br>
       🚇 入境後購買 T-money 或 WOWPASS 交通卡<br>
       📱 必裝 App：<strong>Naver Map</strong>（導航）、<strong>Kakao T</strong>（叫計程車）<br>
-      🧴 OLIVE YOUNG：建議 D2 在明洞一次採購完畢
+      🧴 OLIVE YOUNG：建議 D2 在明洞一次採購完畢<br>
+      📍 口袋名單共 <strong>52 個收藏點</strong>，已依地區整合在每天行程內
     </div>
   </div>
 
